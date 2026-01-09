@@ -71,6 +71,27 @@ Plain text commands, newline or null separated:
 - <= : less than or equal
 - >= : greater than or equal
 
+## Hotspot Format
+```
+X Y W H flags text[suffix]
+```
+Example: `40 350 125 365 0 L'agenda du banquierj`
+
+## Hotspot Suffixes (CRITICAL - interpreted by DLL)
+Based on analysis of couleurs1.vnd and DLL behavior:
+- h : Home/Return hotspot (e.g., SORTIEh returns to parent scene)
+- d : Display/Detail hotspot (shows detailed information)
+- f : Forward/Fermer (closes current view, like SORTIEf)
+- i : Information/Item (interactive object, can be picked up)
+- j : Jump/Info (displays information about a point of interest)
+- k : Key-related action (unlock/trigger)
+- l : Link (navigation link to another scene, e.g., "scene 16l")
+
+## Additional Commands Discovered
+- playwav <path> <loop> : Play WAV audio file
+- rundll <dllname.dll> : Execute external DLL module (e.g., roue.dll)
+- Conditions support "else" clause: `condition then action1 else action2`
+
 ## Author
 Reverse Engineering Project - 2024
 """
@@ -166,12 +187,26 @@ class VNDCommandType(Enum):
     ADDBMP = "addbmp"
     DELBMP = "delbmp"
     PLAYAVI = "playavi"
+    PLAYWAV = "playwav"
+    RUNDLL = "rundll"
     PLAYTEXT = "playtext"
     ADDTEXT = "addtext"
     DEFCURSOR = "defcursor"
     HOTSPOT = "hotspot"
     MEDIA_REF = "media_reference"
     UNKNOWN = "unknown"
+
+
+# Hotspot suffix definitions based on DLL analysis
+HOTSPOT_SUFFIXES = {
+    'h': 'home',      # Return to parent scene
+    'd': 'display',   # Display detailed information
+    'f': 'forward',   # Close/forward navigation
+    'i': 'item',      # Interactive item (can be picked up)
+    'j': 'jump',      # Jump to info/play information
+    'k': 'key',       # Key-related action (unlock)
+    'l': 'link',      # Navigation link
+}
 
 
 # ============================================================================
@@ -396,6 +431,12 @@ class VNDParser:
             cmd.params = parts[1:]
         elif first == 'playavi':
             cmd.type = "playavi"
+            cmd.params = parts[1:]
+        elif first == 'playwav':
+            cmd.type = "playwav"
+            cmd.params = parts[1:]
+        elif first == 'rundll':
+            cmd.type = "rundll"
             cmd.params = parts[1:]
         elif first == 'playtext':
             cmd.type = "playtext"
@@ -631,6 +672,25 @@ class VNDEngine:
         self._trigger_event('play_video', path, priority, x, y, w, h)
         print(f"[ENGINE] Play video: {path} at ({x}, {y}, {w}x{h})")
 
+    def play_wav(self, path: str, loop: int = 0):
+        """
+        Play a WAV audio file
+
+        Equivalent to: playwav <path> <loop>
+        """
+        self._trigger_event('play_audio', path, loop)
+        print(f"[ENGINE] Play audio: {path} (loop={loop})")
+
+    def run_dll(self, dll_name: str):
+        """
+        Execute an external DLL module
+
+        Equivalent to: rundll <dllname.dll>
+        This was used for mini-games like the wheel (roue.dll)
+        """
+        self._trigger_event('run_dll', dll_name)
+        print(f"[ENGINE] Execute DLL: {dll_name}")
+
     def run_project(self, path: str, scene: int):
         """
         Load and run another VND project
@@ -652,18 +712,28 @@ class VNDEngine:
 
         command_lower = command.lower()
 
-        # Handle conditional: <condition> then <action>
+        # Handle conditional: <condition> then <action> [else <action2>]
         if ' then ' in command_lower:
             parts = command.split(' then ', 1)
             condition = parts[0].strip()
-            action = parts[1].strip() if len(parts) > 1 else ""
+            action_part = parts[1].strip() if len(parts) > 1 else ""
 
             # Handle "if <condition>" prefix
             if condition.lower().startswith('if '):
                 condition = condition[3:].strip()
 
+            # Check for else clause
+            action = action_part
+            else_action = None
+            if ' else ' in action_part.lower():
+                action_parts = action_part.split(' else ', 1)
+                action = action_parts[0].strip()
+                else_action = action_parts[1].strip() if len(action_parts) > 1 else None
+
             if self.evaluate_condition(condition):
                 return self.execute_command(action)
+            elif else_action:
+                return self.execute_command(else_action)
             return True  # Condition evaluated, just false
 
         # Parse command
@@ -705,6 +775,14 @@ class VNDEngine:
                     int(parts[5]),
                     int(parts[6]) if len(parts) > 6 else 0
                 )
+
+            elif cmd == 'playwav' and len(parts) >= 2:
+                loop = int(parts[2]) if len(parts) > 2 else 0
+                self.play_wav(parts[1], loop)
+
+            elif cmd == 'rundll' and len(parts) >= 2:
+                self.run_dll(parts[1])
+
             else:
                 return False  # Unknown command
 
