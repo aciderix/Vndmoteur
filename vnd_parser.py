@@ -55,14 +55,37 @@ class VNDResource:
 
 
 @dataclass
+class VNDPolygon:
+    """Polygon definition for hotspot hit-testing (PROVEN STRUCTURE)"""
+    point_count: int
+    points: List[Tuple[int, int]]
+
+    @property
+    def bounding_box(self) -> Tuple[int, int, int, int]:
+        """Return (min_x, min_y, max_x, max_y)"""
+        if not self.points:
+            return (0, 0, 0, 0)
+        xs = [p[0] for p in self.points]
+        ys = [p[1] for p in self.points]
+        return (min(xs), min(ys), max(xs), max(ys))
+
+
+@dataclass
 class VNDHotspot:
-    """Interactive hotspot definition"""
+    """Interactive hotspot definition with polygon (PROVEN STRUCTURE)
+
+    VND format stores hotspots as:
+    - Text: "X Y W H 0 Name" (text label bounding box)
+    - Binary: 00 00 00 [point_count:u32] [x1:u32][y1:u32]...[xN:u32][yN:u32]
+    """
     id: int
     x: int
     y: int
     width: int
     height: int
     action: str
+    name: str = ""
+    polygon: Optional[VNDPolygon] = None
     target_scene: int = -1
 
 
@@ -138,6 +161,92 @@ class VNDParser:
         if offset + 1 > len(self.data):
             return 0, offset
         return self.data[offset], offset + 1
+
+    def read_int32(self, offset: int) -> Tuple[int, int]:
+        """Read a 32-bit signed integer"""
+        if offset + 4 > len(self.data):
+            return 0, offset
+        value = struct.unpack_from('<i', self.data, offset)[0]
+        return value, offset + 4
+
+    def parse_polygon_at(self, offset: int) -> Optional[VNDPolygon]:
+        """Parse polygon structure at given offset (PROVEN FORMAT)
+
+        Binary format:
+        [point_count: u32] [x1:u32][y1:u32]...[xN:u32][yN:u32]
+        """
+        if offset + 4 > len(self.data):
+            return None
+
+        point_count, _ = self.read_uint32(offset)
+
+        # Validate point count
+        if point_count < 3 or point_count > 30:
+            return None
+
+        # Check if we have enough data for all points
+        if offset + 4 + point_count * 8 > len(self.data):
+            return None
+
+        points = []
+        pos = offset + 4
+
+        for _ in range(point_count):
+            x, pos = self.read_int32(pos)
+            y, pos = self.read_int32(pos)
+
+            # Validate screen coordinates (with margin)
+            if not (-100 <= x <= 2000 and -100 <= y <= 1000):
+                return None
+
+            points.append((x, y))
+
+        return VNDPolygon(point_count=point_count, points=points)
+
+    def find_hotspot_polygons(self) -> List[VNDHotspot]:
+        """Find and parse all hotspot definitions with polygons (PROVEN FORMAT)
+
+        Text format: "X Y W H 0 HotspotName"
+        Followed by: 00 00 00 [point_count:u32] [coordinates...]
+        """
+        import re
+        hotspots = []
+        hotspot_id = 0
+
+        # Pattern: "X Y W H 0 Name" where Name starts with letter
+        pattern = rb'(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+0\s+([A-Za-z][^\x00\n\r]{1,50})'
+
+        for match in re.finditer(pattern, self.data):
+            x1, y1, x2, y2 = map(int, match.groups()[:4])
+            name = match.group(5).decode('latin-1', errors='replace').strip()
+
+            # Skip invalid names
+            if len(name) > 50 or not name[0].isalpha():
+                continue
+
+            # Look for polygon after text (skip null padding)
+            text_end = match.end()
+            polygon = None
+
+            # Try to find polygon in next 50 bytes
+            for scan_offset in range(text_end, min(text_end + 50, len(self.data) - 4)):
+                polygon = self.parse_polygon_at(scan_offset)
+                if polygon:
+                    break
+
+            hotspots.append(VNDHotspot(
+                id=hotspot_id,
+                x=x1,
+                y=y1,
+                width=x2,
+                height=y2,
+                action="",
+                name=name,
+                polygon=polygon
+            ))
+            hotspot_id += 1
+
+        return hotspots
 
     def parse_header(self) -> int:
         """Parse the VND file header, returns offset after header"""
