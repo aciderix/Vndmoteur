@@ -253,11 +253,16 @@ Example: "455 430 125 480 0 Quitteri"
 | 0x6714 | runprj target | 7 | (551,289)-(630,394) |
 | 0x11f90 | Quitter | 8 | (518,356)-(624,474) |
 
+### Completed Analysis
+1. **Record Type Enumeration**: 65+ record types identified (see VND_BINARY_FORMAT.md)
+2. **Scene Structure**: Complete scene format decoded (name, audio, background, hotspots)
+3. **Event Handling**: Events are implicit - hotspot polygons trigger ONCLICK, conditionals define actions
+4. **Variable Table**: 240+ game variables discovered in header
+
 ### Next Steps
-1. Complete the record type enumeration
-2. Map scene structure (scene number, resources, events)
-3. Decode event handlers (EV_ONCLICK, EV_ONFOCUS associations)
-4. Create complete VND parser with binary support
+1. Create complete VND parser with binary support
+2. Implement scene renderer for testing
+3. Cross-validate with vnresmod.dll disassembly
 
 ---
 
