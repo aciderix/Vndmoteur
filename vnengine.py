@@ -77,20 +77,42 @@ X Y W H flags text[suffix]
 ```
 Example: `40 350 125 365 0 L'agenda du banquierj`
 
-## Hotspot Suffixes (CRITICAL - interpreted by DLL)
-Based on analysis of couleurs1.vnd and DLL behavior:
-- h : Home/Return hotspot (e.g., SORTIEh returns to parent scene)
-- d : Display/Detail hotspot (shows detailed information)
-- f : Forward/Fermer (closes current view, like SORTIEf)
-- i : Information/Item (interactive object, can be picked up)
-- j : Jump/Info (displays information about a point of interest)
-- k : Key-related action (unlock/trigger)
-- l : Link (navigation link to another scene, e.g., "scene 16l")
+## Hotspot Suffixes (OBSERVED - meaning NOT YET PROVEN)
+Suffixes observed in VND files (e.g., "SORTIEh", "39i", "Venisej"):
+- h, d, f, i, j, k, l : Single letter suffixes appended to hotspot names
+- Their exact interpretation by europeo.exe is NOT YET REVERSE-ENGINEERED
+- TODO: Find the switch/comparison in europeo.exe that handles these
 
-## Additional Commands Discovered
-- playwav <path> <loop> : Play WAV audio file
-- rundll <dllname.dll> : Execute external DLL module (e.g., roue.dll)
-- Conditions support "else" clause: `condition then action1 else action2`
+## Complete Command Table (PROVEN - extracted from europeo.exe)
+Navigation: quit, about, prefs, prev, next, zoom, zoomin, zoomout, scene, hotspot, explore
+Media:      playavi, playbmp, playwav, playmid, playcda, playseq, playhtml, playcmd, playtext
+Close:      closeavi, closewav, closemid, closedll
+Bitmap:     addbmp, delbmp, showbmp, hidebmp
+Object:     showobj, hideobj, delobj, addtext
+Variables:  set_var, inc_var, dec_var
+Execution:  exec, runprj, rundll, pause
+UI:         tiptext, defcursor, font, msgbox, invalidate, update
+File:       load, save
+
+## Event Types (PROVEN - from europeo.exe)
+- EV_ONFOCUS  : Mouse hover/focus event
+- EV_ONCLICK  : Mouse click event
+- EV_ONINIT   : Initialization event
+- EV_AFTERINIT: Post-initialization event
+
+## vndllapi.dll API (PROVEN - decompiled)
+- InitVNCommandMessage(): Registers "wm_vncommand" Windows message
+- VNDLLVarFind(list, name): Finds variable by name (case-insensitive)
+- VNDLLVarAddModify(list, name, value): Adds/modifies variable
+
+## Variable Structure (PROVEN - from vndllapi.dll)
+```c
+typedef struct VNDLLVar {
+    char name[256];       // 0x00-0xFF: Variable name (uppercase)
+    int value;            // 0x100: Variable value
+    struct VNDLLVar* next; // 0x104: Next in linked list
+} VNDLLVar;  // Total: 264 bytes (0x108)
+```
 
 ## Author
 Reverse Engineering Project - 2024
