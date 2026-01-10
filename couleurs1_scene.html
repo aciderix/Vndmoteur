@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>VND Scene Renderer - couleurs1.vnd</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #4ECDC4;
+            margin-bottom: 10px;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+        .scene-view {
+            background: #16213e;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .info-panel {
+            background: #16213e;
+            border-radius: 8px;
+            padding: 15px;
+            width: 350px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .hotspot-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .hotspot-item {
+            padding: 8px 12px;
+            margin: 4px 0;
+            background: #0f3460;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .hotspot-item:hover {
+            background: #1a4a7a;
+        }
+        .hotspot-item.active {
+            background: #4ECDC4;
+            color: #1a1a2e;
+        }
+        .polygon {
+            fill-opacity: 0.3;
+            stroke-width: 2;
+            cursor: pointer;
+            transition: fill-opacity 0.2s;
+        }
+        .polygon:hover {
+            fill-opacity: 0.6;
+        }
+        .label {
+            font-size: 11px;
+            fill: white;
+            text-shadow: 1px 1px 2px black;
+            pointer-events: none;
+        }
+        .stats {
+            background: #0f3460;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .tooltip {
+            position: absolute;
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            max-width: 300px;
+            display: none;
+            z-index: 1000;
+        }
+        #details {
+            margin-top: 15px;
+            padding: 10px;
+            background: #0f3460;
+            border-radius: 4px;
+            min-height: 100px;
+        }
+        .cmd {
+            font-family: monospace;
+            font-size: 11px;
+            background: #1a1a2e;
+            padding: 4px 8px;
+            margin: 2px 0;
+            border-radius: 3px;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎮 VND Scene Renderer</h1>
+    <p>File: <code>couleurs1.vnd</code> |
+       Size: 76,174 bytes |
+       Screen: 640x480</p>
+
+    <div class="container">
+        <div class="scene-view">
+            <svg id="scene" width="640" height="480"
+                 style="background: #2d2d44; border: 1px solid #4ECDC4;">
+
+                <!-- Grid -->
+                <defs>
+                    <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+                        <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#3a3a5a" stroke-width="0.5"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid)"/>
+
+                <!-- Polygons -->
+
+                <g class="hotspot-group" data-index="2">
+                    <polygon class="polygon"
+                             points="9,385 50,395 149,355 145,277 38,192 1,248"
+                             fill="#45B7D1"
+                             stroke="#45B7D1"
+                             data-name="Ma maison"
+                             data-commands=""
+                             onclick="selectHotspot(2)"/>
+                    <text class="label" x="75" y="293"
+                          text-anchor="middle">Ma maison</text>
+                </g>
+
+                <g class="hotspot-group" data-index="4">
+                    <polygon class="polygon"
+                             points="287,267 270,238 273,198 270,181 315,149 347,136 388,162 417,190 405,203 411,245 383,280"
+                             fill="#FFEAA7"
+                             stroke="#FFEAA7"
+                             data-name="Le musée du village"
+                             data-commands=""
+                             onclick="selectHotspot(4)"/>
+                    <text class="label" x="343" y="208"
+                          text-anchor="middle">Le musée du vil</text>
+                </g>
+
+                <g class="hotspot-group" data-index="7">
+                    <polygon class="polygon"
+                             points="360,210 448,242 413,344 318,306"
+                             fill="#F7DC6F"
+                             stroke="#F7DC6F"
+                             data-name="L'agenda du banquierj"
+                             data-commands=""
+                             onclick="selectHotspot(7)"/>
+                    <text class="label" x="383" y="277"
+                          text-anchor="middle">L'agenda du ban</text>
+                </g>
+
+                <g class="hotspot-group" data-index="12">
+                    <polygon class="polygon"
+                             points="184,340 194,215 206,181 177,158 213,123 312,132 332,171 308,194 321,291 317,340"
+                             fill="#FF69B4"
+                             stroke="#FF69B4"
+                             data-name="Le banquier d'Eurolandl"
+                             data-commands=""
+                             onclick="selectHotspot(12)"/>
+                    <text class="label" x="254" y="231"
+                          text-anchor="middle">Le banquier d'E</text>
+                </g>
+
+                <g class="hotspot-group" data-index="15">
+                    <polygon class="polygon"
+                             points="451,17 552,10 556,133 450,138"
+                             fill="#FF6B6B"
+                             stroke="#FF6B6B"
+                             data-name="tu as déjà réponduk"
+                             data-commands="bonus3 = 0 then playwav bruit\boing.wav 1; bonus3 = 0 then set_var bonus3 1"
+                             onclick="selectHotspot(15)"/>
+                    <text class="label" x="503" y="74"
+                          text-anchor="middle">tu as déjà répo</text>
+                </g>
+
+                <g class="hotspot-group" data-index="21">
+                    <polygon class="polygon"
+                             points="989,262 1018,213 1057,212 1112,290 1061,294 1060,265"
+                             fill="#98D8C8"
+                             stroke="#98D8C8"
+                             data-name="Une lampe de bureaud"
+                             data-commands="telephone = 1 then addbmp tt euroland\rollover\maintel.bmp 0 732 240; telephone = 0 then scene 16l"
+                             onclick="selectHotspot(21)"/>
+                    <text class="label" x="1050" y="253"
+                          text-anchor="middle">Une lampe de bu</text>
+                </g>
+
+                <g class="hotspot-group" data-index="24">
+                    <polygon class="polygon"
+                             points="1079,99 1198,67 1200,122 1083,140"
+                             fill="#85C1E9"
+                             stroke="#85C1E9"
+                             data-name="Les Hymnes"
+                             data-commands=""
+                             onclick="selectHotspot(24)"/>
+                    <text class="label" x="1139" y="103"
+                          text-anchor="middle">Les Hymnes</text>
+                </g>
+
+                <g class="hotspot-group" data-index="25">
+                    <polygon class="polygon"
+                             points="1079,99 1198,67 1200,122 1083,140"
+                             fill="#F8B500"
+                             stroke="#F8B500"
+                             data-name="nationauxj"
+                             data-commands=""
+                             onclick="selectHotspot(25)"/>
+                    <text class="label" x="1139" y="103"
+                          text-anchor="middle">nationauxj</text>
+                </g>
+
+                <g class="hotspot-group" data-index="31">
+                    <polygon class="polygon"
+                             points="1768,178 1769,81 1807,46 1874,42 1878,148"
+                             fill="#4ECDC4"
+                             stroke="#4ECDC4"
+                             data-name="Le mur de"
+                             data-commands=""
+                             onclick="selectHotspot(31)"/>
+                    <text class="label" x="1823" y="110"
+                          text-anchor="middle">Le mur de</text>
+                </g>
+
+                <g class="hotspot-group" data-index="32">
+                    <polygon class="polygon"
+                             points="1768,178 1769,81 1807,46 1874,42 1878,148"
+                             fill="#45B7D1"
+                             stroke="#45B7D1"
+                             data-name="Berlinj"
+                             data-commands=""
+                             onclick="selectHotspot(32)"/>
+                    <text class="label" x="1823" y="110"
+                          text-anchor="middle">Berlinj</text>
+                </g>
+
+                <g class="hotspot-group" data-index="34">
+                    <polygon class="polygon"
+                             points="1408,112 1444,51 1537,54 1508,114"
+                             fill="#FFEAA7"
+                             stroke="#FFEAA7"
+                             data-name="Les jeux"
+                             data-commands=""
+                             onclick="selectHotspot(34)"/>
+                    <text class="label" x="1472" y="82"
+                          text-anchor="middle">Les jeux</text>
+                </g>
+
+                <g class="hotspot-group" data-index="35">
+                    <polygon class="polygon"
+                             points="1408,112 1444,51 1537,54 1508,114"
+                             fill="#DDA0DD"
+                             stroke="#DDA0DD"
+                             data-name="Olympiquesj"
+                             data-commands=""
+                             onclick="selectHotspot(35)"/>
+                    <text class="label" x="1472" y="82"
+                          text-anchor="middle">Olympiquesj</text>
+                </g>
+
+                <g class="hotspot-group" data-index="36">
+                    <polygon class="polygon"
+                             points="1104,148 1200,131 1201,193 1102,196"
+                             fill="#98D8C8"
+                             stroke="#98D8C8"
+                             data-name="La cornemusej"
+                             data-commands=""
+                             onclick="selectHotspot(36)"/>
+                    <text class="label" x="1151" y="163"
+                          text-anchor="middle">La cornemusej</text>
+                </g>
+
+                <g class="hotspot-group" data-index="41">
+                    <polygon class="polygon"
+                             points="1580,125 1743,99 1742,176 1581,188"
+                             fill="#00CED1"
+                             stroke="#00CED1"
+                             data-name="L'exposition"
+                             data-commands=""
+                             onclick="selectHotspot(41)"/>
+                    <text class="label" x="1661" y="143"
+                          text-anchor="middle">L'exposition</text>
+                </g>
+
+                <g class="hotspot-group" data-index="42">
+                    <polygon class="polygon"
+                             points="1580,125 1743,99 1742,176 1581,188"
+                             fill="#FF69B4"
+                             stroke="#FF69B4"
+                             data-name="universellej"
+                             data-commands=""
+                             onclick="selectHotspot(42)"/>
+                    <text class="label" x="1661" y="143"
+                          text-anchor="middle">universellej</text>
+                </g>
+
+                <g class="hotspot-group" data-index="44">
+                    <polygon class="polygon"
+                             points="31,260 21,246 29,227 77,228 75,257"
+                             fill="#FFD700"
+                             stroke="#FFD700"
+                             data-name="la fabrication"
+                             data-commands=""
+                             onclick="selectHotspot(44)"/>
+                    <text class="label" x="49" y="243"
+                          text-anchor="middle">la fabrication</text>
+                </g>
+
+                <g class="hotspot-group" data-index="45">
+                    <polygon class="polygon"
+                             points="31,260 21,246 29,227 77,228 75,257"
+                             fill="#FF6B6B"
+                             stroke="#FF6B6B"
+                             data-name="de la bièrej"
+                             data-commands=""
+                             onclick="selectHotspot(45)"/>
+                    <text class="label" x="49" y="243"
+                          text-anchor="middle">de la bièrej</text>
+                </g>
+
+                <g class="hotspot-group" data-index="50">
+                    <polygon class="polygon"
+                             points="1128,203 1203,199 1204,261 1135,258"
+                             fill="#DDA0DD"
+                             stroke="#DDA0DD"
+                             data-name="Les tulipesj"
+                             data-commands=""
+                             onclick="selectHotspot(50)"/>
+                    <text class="label" x="1166" y="230"
+                          text-anchor="middle">Les tulipesj</text>
+                </g>
+
+                <g class="hotspot-group" data-index="60">
+                    <polygon class="polygon"
+                             points="65,300 72,168 87,136 181,142 230,188 227,272 221,300"
+                             fill="#FF6B6B"
+                             stroke="#FF6B6B"
+                             data-name="SORTIEf"
+                             data-commands=""
+                             onclick="selectHotspot(60)"/>
+                    <text class="label" x="147" y="218"
+                          text-anchor="middle">SORTIEf</text>
+                </g>
+
+                <g class="hotspot-group" data-index="62">
+                    <polygon class="polygon"
+                             points="579,271 496,271 413,262 397,241 436,227 462,211 475,211 478,174 502,169 509,203 524,203 537,223 574,233 610,262"
+                             fill="#45B7D1"
+                             stroke="#45B7D1"
+                             data-name="Une table avec plein de choses dessus"
+                             data-commands=""
+                             onclick="selectHotspot(62)"/>
+                    <text class="label" x="503" y="220"
+                          text-anchor="middle">Une table avec </text>
+                </g>
+
+                <g class="hotspot-group" data-index="68">
+                    <polygon class="polygon"
+                             points="1810,221 1803,196 1828,164 1850,173 1850,191 1862,203 1863,222"
+                             fill="#BB8FCE"
+                             stroke="#BB8FCE"
+                             data-name="dans le chaudroni"
+                             data-commands="clejaune = 0 then addbmp clejaune euroland\rollover\clejaune.bmp 0 1794 178"
+                             onclick="selectHotspot(68)"/>
+                    <text class="label" x="1833" y="193"
+                          text-anchor="middle">dans le chaudro</text>
+                </g>
+
+                <g class="hotspot-group" data-index="73">
+                    <polygon class="polygon"
+                             points="770,345 752,123 892,129 939,243 1018,255 1019,115 1142,121 1130,357 1049,393"
+                             fill="#32CD32"
+                             stroke="#32CD32"
+                             data-name="Un litd"
+                             data-commands="bonus1 = 0 then set_var bonus1 1; bonus1 = 1 then scene 35"
+                             onclick="selectHotspot(73)"/>
+                    <text class="label" x="947" y="254"
+                          text-anchor="middle">Un litd</text>
+                </g>
+
+                <g class="hotspot-group" data-index="75">
+                    <polygon class="polygon"
+                             points="416,44 414,97 520,106 500,40"
+                             fill="#FF6B6B"
+                             stroke="#FF6B6B"
+                             data-name="dans cette pièce, mais pas ici.d"
+                             data-commands=""
+                             onclick="selectHotspot(75)"/>
+                    <text class="label" x="467" y="73"
+                          text-anchor="middle">dans cette pièc</text>
+                </g>
+
+                <g class="hotspot-group" data-index="79">
+                    <polygon class="polygon"
+                             points="311,291 312,237 349,188 406,179 532,173 559,239 600,274 605,298"
+                             fill="#FFEAA7"
+                             stroke="#FFEAA7"
+                             data-name="Une table à produitsi"
+                             data-commands="portugal = 1  then set_var portugal 0; suede = 1  then set_var suede 0"
+                             onclick="selectHotspot(79)"/>
+                    <text class="label" x="458" y="235"
+                          text-anchor="middle">Une table à pro</text>
+                </g>
+
+                <g class="hotspot-group" data-index="83">
+                    <polygon class="polygon"
+                             points="174,337 174,283 191,258 286,269 307,277 310,338 269,354"
+                             fill="#BB8FCE"
+                             stroke="#BB8FCE"
+                             data-name="Un coffre fermé à cléi"
+                             data-commands="cleverte = 2 then playwav porte2.wav 1; cleverte = 2 then set_var cleverte -1"
+                             onclick="selectHotspot(83)"/>
+                    <text class="label" x="242" y="306"
+                          text-anchor="middle">Un coffre fermé</text>
+                </g>
+
+                <g class="hotspot-group" data-index="86">
+                    <polygon class="polygon"
+                             points="98,245 100,90 149,52 212,49 275,89 289,246"
+                             fill="#00CED1"
+                             stroke="#00CED1"
+                             data-name="SORTIEf"
+                             data-commands=""
+                             onclick="selectHotspot(86)"/>
+                    <text class="label" x="193" y="147"
+                          text-anchor="middle">SORTIEf</text>
+                </g>
+
+                <g class="hotspot-group" data-index="87">
+                    <polygon class="polygon"
+                             points="397,328 400,290 377,253 396,149 426,130 480,124 480,151 479,189 506,269 474,287 508,331 451,334"
+                             fill="#FF69B4"
+                             stroke="#FF69B4"
+                             data-name="Le conservateur du muséel"
+                             data-commands=""
+                             onclick="selectHotspot(87)"/>
+                    <text class="label" x="442" y="229"
+                          text-anchor="middle">Le conservateur</text>
+                </g>
+
+                <g class="hotspot-group" data-index="103">
+                    <polygon class="polygon"
+                             points="434,126 432,105 531,74 554,97 559,121 469,143"
+                             fill="#32CD32"
+                             stroke="#32CD32"
+                             data-name="Il te faut un sac à dos pour le mettre dedansd"
+                             data-commands="sacados = 1 then if allumette = 0 then set_var allumette 1; allumette != 0 then addbmp al euroland\rollover\allumette2.bmp 0 360 36"
+                             onclick="selectHotspot(103)"/>
+                    <text class="label" x="495" y="108"
+                          text-anchor="middle">Il te faut un s</text>
+                </g>
+
+                <g class="hotspot-group" data-index="132">
+                    <polygon class="polygon"
+                             points="491,176 513,186 539,177 543,159 537,118 510,109 496,118 487,152"
+                             fill="#FF69B4"
+                             stroke="#FF69B4"
+                             data-name="Il te faut un sac à dos pour ranger tes objetsd"
+                             data-commands="burette != 0 then addbmp burette rollover\burette2.bmp 0 0 191h; sacados = 1 then if sirop = 0 then set_var sirop 1"
+                             onclick="selectHotspot(132)"/>
+                    <text class="label" x="515" y="147"
+                          text-anchor="middle">Il te faut un s</text>
+                </g>
+
+                <g class="hotspot-group" data-index="134">
+                    <polygon class="polygon"
+                             points="203,267 209,220 287,218 284,265"
+                             fill="#FFD700"
+                             stroke="#FFD700"
+                             data-name="Il te faut un sac à dos pour ranger tes objetsd"
+                             data-commands="sacados = 1 then if levure = 0 then set_var levure 1; levure != 0 then addbmp levure rollover\levure2.bmp 0 205 189"
+                             onclick="selectHotspot(134)"/>
+                    <text class="label" x="245" y="242"
+                          text-anchor="middle">Il te faut un s</text>
+                </g>
+
+                <g class="hotspot-group" data-index="136">
+                    <polygon class="polygon"
+                             points="40,280 42,225 82,201 122,218 117,279"
+                             fill="#4ECDC4"
+                             stroke="#4ECDC4"
+                             data-name="Il te faut un sac à dos pour ranger tes objetsd"
+                             data-commands="sacados = 1 then if burette = 0 then set_var burette 1; burette != 0 then addbmp burette rollover\burette2.bmp 0 0 191"
+                             onclick="selectHotspot(136)"/>
+                    <text class="label" x="81" y="240"
+                          text-anchor="middle">Il te faut un s</text>
+                </g>
+
+                <g class="hotspot-group" data-index="137">
+                    <polygon class="polygon"
+                             points="163,218 108,193 128,126 145,49 181,39 507,43 520,100 483,135 491,188 404,211 383,241 341,246 307,232 298,187 261,188 223,215"
+                             fill="#45B7D1"
+                             stroke="#45B7D1"
+                             data-name="Des produits chimiquesd"
+                             data-commands="sacados = 1 then if burette = 0 then set_var burette 1; burette != 0 then addbmp burette rollover\burette2.bmp 0 0 191"
+                             onclick="selectHotspot(137)"/>
+                    <text class="label" x="314" y="142"
+                          text-anchor="middle">Des produits ch</text>
+                </g>
+
+                <g class="hotspot-group" data-index="138">
+                    <polygon class="polygon"
+                             points="418,227 492,212 580,268 491,291"
+                             fill="#96CEB4"
+                             stroke="#96CEB4"
+                             data-name="Plan du transvecteur"
+                             data-commands=""
+                             onclick="selectHotspot(138)"/>
+                    <text class="label" x="499" y="251"
+                          text-anchor="middle">Plan du transve</text>
+                </g>
+
+                <g class="hotspot-group" data-index="139">
+                    <polygon class="polygon"
+                             points="384,359 336,347 361,302 331,287 350,216 358,102 459,101 471,202 498,273 475,301 461,370"
+                             fill="#FFEAA7"
+                             stroke="#FFEAA7"
+                             data-name="Le maire d'Eurolandl"
+                             data-commands=""
+                             onclick="selectHotspot(139)"/>
+                    <text class="label" x="414" y="235"
+                          text-anchor="middle">Le maire d'Euro</text>
+                </g>
+
+                <g class="hotspot-group" data-index="141">
+                    <polygon class="polygon"
+                             points="10,260 50,230 90,225 90,0 190,0 190,225 225,230 260,260 140,270"
+                             fill="#98D8C8"
+                             stroke="#98D8C8"
+                             data-name="La fontaine à couleursj"
+                             data-commands=""
+                             onclick="selectHotspot(141)"/>
+                    <text class="label" x="135" y="135"
+                          text-anchor="middle">La fontaine à c</text>
+                </g>
+
+                <g class="hotspot-group" data-index="143">
+                    <polygon class="polygon"
+                             points="106,306 120,270 156,255 188,284 177,323 136,336"
+                             fill="#BB8FCE"
+                             stroke="#BB8FCE"
+                             data-name="Vide else playtext 280 260 125 365 0 Activéi"
+                             data-commands="occupe1 = 1 then addbmp f1 rollover\b1.bmp 0 118 258; occupe1 = 1 then addbmp f1 rollover\b1.bmp 0 118 258"
+                             onclick="selectHotspot(143)"/>
+                    <text class="label" x="147" y="295"
+                          text-anchor="middle">Vide else playt</text>
+                </g>
+
+                <g class="hotspot-group" data-index="145">
+                    <polygon class="polygon"
+                             points="71,182 75,154 95,134 120,134 135,157 98,185"
+                             fill="#F8B500"
+                             stroke="#F8B500"
+                             data-name="Vide else playtext 280 260 125 365 0 Activéi"
+                             data-commands="occupe3 = 1 then addbmp f3 rollover\b3.bmp 0 69 132; occupe3 = 1 then addbmp f3 rollover\b3.bmp 0 69 132"
+                             onclick="selectHotspot(145)"/>
+                    <text class="label" x="103" y="159"
+                          text-anchor="middle">Vide else playt</text>
+                </g>
+
+                <g class="hotspot-group" data-index="146">
+                    <polygon class="polygon"
+                             points="115,106 140,76 190,94 155,128"
+                             fill="#00CED1"
+                             stroke="#00CED1"
+                             data-name="Vide else playtext 280 260 125 365 0 Activéi"
+                             data-commands="occupe4 = 1 then addbmp f4 rollover\b4.bmp  0 121 76; occupe4 = 1 then addbmp f4 rollover\b4.bmp 0 121 76"
+                             onclick="selectHotspot(146)"/>
+                    <text class="label" x="152" y="102"
+                          text-anchor="middle">Vide else playt</text>
+                </g>
+
+                <g class="hotspot-group" data-index="147">
+                    <polygon class="polygon"
+                             points="210,90 220,50 245,45 265,80"
+                             fill="#FF69B4"
+                             stroke="#FF69B4"
+                             data-name="Vide else playtext 280 260 125 365 0 Activéi"
+                             data-commands="occupe5 = 1 then addbmp f5 rollover\b5.bmp 0 208 42; occupe5 = 1 then addbmp f5 rollover\b5.bmp 0 208 42"
+                             onclick="selectHotspot(147)"/>
+                    <text class="label" x="237" y="67"
+                          text-anchor="middle">Vide else playt</text>
+                </g>
+
+                <g class="hotspot-group" data-index="148">
+                    <polygon class="polygon"
+                             points="307,70 323,41 350,45 360,80"
+                             fill="#32CD32"
+                             stroke="#32CD32"
+                             data-name="Vide else playtext 280 260 125 365 0 Activéi"
+                             data-commands="occupe6 = 1 then addbmp f6 rollover\b6.bmp 0 309 39; occupe6 = 1 then addbmp f6 rollover\b6.bmp 0 309 39"
+                             onclick="selectHotspot(148)"/>
+                    <text class="label" x="333" y="60"
+                          text-anchor="middle">Vide else playt</text>
+                </g>
+
+                <g class="hotspot-group" data-index="149">
+                    <polygon class="polygon"
+                             points="390,90 428,105 447,93 438,67 406,58"
+                             fill="#FFD700"
+                             stroke="#FFD700"
+                             data-name="Vide else playtext 280 260 125 365 0 Activéi"
+                             data-commands="occupe7 = 1 then addbmp f7 rollover\b7.bmp 0 392 58; occupe7 = 1 then addbmp f7 rollover\b7.bmp 0 392 58"
+                             onclick="selectHotspot(149)"/>
+                    <text class="label" x="418" y="81"
+                          text-anchor="middle">Vide else playt</text>
+                </g>
+
+                <g class="hotspot-group" data-index="150">
+                    <polygon class="polygon"
+                             points="492,158 461,135 458,113 475,106 504,115 516,140 514,158"
+                             fill="#FF6B6B"
+                             stroke="#FF6B6B"
+                             data-name="Vide else playtext 280 260 125 365 0 Activé"
+                             data-commands="occupe8 = 1 then addbmp f8 rollover\b8.bmp 0 456 110; occupe8 = 1 then addbmp f8 rollover\b8.bmp 0 456 110"
+                             onclick="selectHotspot(150)"/>
+                    <text class="label" x="487" y="132"
+                          text-anchor="middle">Vide else playt</text>
+                </g>
+
+                <g class="hotspot-group" data-index="151">
+                    <polygon class="polygon"
+                             points="537,227 503,221 484,192 492,173 524,169 546,199"
+                             fill="#4ECDC4"
+                             stroke="#4ECDC4"
+                             data-name="Vide else playtext 280 260 125 365 0 Activéi"
+                             data-commands="occupe9 = 1 then addbmp f9 rollover\b9.bmp 0 477 172; occupe9 = 1 then addbmp f9 rollover\b9.bmp 0 477 172"
+                             onclick="selectHotspot(151)"/>
+                    <text class="label" x="515" y="198"
+                          text-anchor="middle">Vide else playt</text>
+                </g>
+
+                <g class="hotspot-group" data-index="152">
+                    <polygon class="polygon"
+                             points="493,311 451,289 456,245 492,241 520,279"
+                             fill="#45B7D1"
+                             stroke="#45B7D1"
+                             data-name="Vide else playtext 280 260 125 365 0 Activéi"
+                             data-commands="occupe10 = 1 then addbmp f10 rollover\b91.bmp 00 443 238; occupe10 = 1 then addbmp f10 rollover\b91.bmp 0 443 238"
+                             onclick="selectHotspot(152)"/>
+                    <text class="label" x="485" y="276"
+                          text-anchor="middle">Vide else playt</text>
+                </g>
+
+                <g class="hotspot-group" data-index="153">
+                    <polygon class="polygon"
+                             points="362,366 336,326 349,294 386,279 422,309 422,349"
+                             fill="#96CEB4"
+                             stroke="#96CEB4"
+                             data-name="Vide else playtext 280 260 125 365 0 Activéi"
+                             data-commands="occupe11 = 1 then addbmp f11 rollover\b92.bmp 0 345 293; occupe11 = 1 then addbmp f11 rollover\b92.bmp 0 345 293"
+                             onclick="selectHotspot(153)"/>
+                    <text class="label" x="379" y="322"
+                          text-anchor="middle">Vide else playt</text>
+                </g>
+
+                <g class="hotspot-group" data-index="154">
+                    <polygon class="polygon"
+                             points="220,365 210,332 227,302 257,297 284,308 293,342 265,378"
+                             fill="#FFEAA7"
+                             stroke="#FFEAA7"
+                             data-name="Vide else playtext 280 260 125 365 0 Activéi"
+                             data-commands="occupe12 = 1 then addbmp f12 rollover\b93.bmp  0 216 302; occupe12 = 1 then addbmp f12 rollover\b93.bmp 0 216 302"
+                             onclick="selectHotspot(154)"/>
+                    <text class="label" x="251" y="337"
+                          text-anchor="middle">Vide else playt</text>
+                </g>
+
+                <g class="hotspot-group" data-index="163">
+                    <polygon class="polygon"
+                             points="518,457 520,416 534,376 558,356 604,361 621,402 624,457 592,474"
+                             fill="#32CD32"
+                             stroke="#32CD32"
+                             data-name="Quitteri"
+                             data-commands=""
+                             onclick="selectHotspot(163)"/>
+                    <text class="label" x="571" y="415"
+                          text-anchor="middle">Quitteri</text>
+                </g>
+
+                <g class="hotspot-group" data-index="167">
+                    <polygon class="polygon"
+                             points="2,303 86,307 195,373 349,382 532,363 635,314 637,397 4,397"
+                             fill="#45B7D1"
+                             stroke="#45B7D1"
+                             data-name="SORTIE"
+                             data-commands=""
+                             onclick="selectHotspot(167)"/>
+                    <text class="label" x="319" y="350"
+                          text-anchor="middle">SORTIE</text>
+                </g>
+
+                <g class="hotspot-group" data-index="168">
+                    <polygon class="polygon"
+                             points="339,182 321,146 347,99 350,54 346,27 363,14 392,18 395,38 390,58 388,99 415,144 401,181 369,193"
+                             fill="#96CEB4"
+                             stroke="#96CEB4"
+                             data-name="Une bouteille vided"
+                             data-commands=""
+                             onclick="selectHotspot(168)"/>
+                    <text class="label" x="368" y="103"
+                          text-anchor="middle">Une bouteille v</text>
+                </g>
+
+            </svg>
+        </div>
+
+        <div class="info-panel">
+            <div class="stats">
+
+                <strong>📊 Statistics</strong><br>
+                Hotspots: 171<br>
+                With Polygons: 49<br>
+                Backgrounds: 32
+            </div>
+
+            <strong>🎯 Hotspots</strong>
+            <ul class="hotspot-list">
+
+                <li class="hotspot-item" data-index="0" onclick="selectHotspot(0)">
+                    <strong>La bibliothèque</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="1" onclick="selectHotspot(1)">
+                    <strong>La banque</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="2" onclick="selectHotspot(2)">
+                    <strong>Ma maison</strong> (1,192)
+                </li>
+
+                <li class="hotspot-item" data-index="3" onclick="selectHotspot(3)">
+                    <strong>La maison de prof</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="4" onclick="selectHotspot(4)">
+                    <strong>Le musée du village</strong> (270,136)
+                </li>
+
+                <li class="hotspot-item" data-index="5" onclick="selectHotspot(5)">
+                    <strong>La fontaine à couleurs</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="6" onclick="selectHotspot(6)">
+                    <strong>SORTIE</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="7" onclick="selectHotspot(7)">
+                    <strong>L'agenda du banquierj</strong> (318,210)
+                </li>
+
+                <li class="hotspot-item" data-index="8" onclick="selectHotspot(8)">
+                    <strong>Une tasse de café noird</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="9" onclick="selectHotspot(9)">
+                    <strong>Une bouteille d'encre noi</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="10" onclick="selectHotspot(10)">
+                    <strong>Dossier euroj</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="11" onclick="selectHotspot(11)">
+                    <strong>SORTIE</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="12" onclick="selectHotspot(12)">
+                    <strong>Le banquier d'Eurolandl</strong> (177,123)
+                </li>
+
+                <li class="hotspot-item" data-index="13" onclick="selectHotspot(13)">
+                    <strong>Un coffre forti</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="14" onclick="selectHotspot(14)">
+                    <strong>Question Bonus</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="15" onclick="selectHotspot(15)">
+                    <strong>tu as déjà réponduk</strong> (450,10)
+                </li>
+
+                <li class="hotspot-item" data-index="16" onclick="selectHotspot(16)">
+                    <strong>Le bureau du banquierj</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="17" onclick="selectHotspot(17)">
+                    <strong>SORTIE</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="18" onclick="selectHotspot(18)">
+                    <strong>Le livre des</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="19" onclick="selectHotspot(19)">
+                    <strong>recettes d'Europej</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="20" onclick="selectHotspot(20)">
+                    <strong>La bibliothécaire d'Eurol</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="21" onclick="selectHotspot(21)">
+                    <strong>Une lampe de bureaud</strong> (989,212)
+                </li>
+
+                <li class="hotspot-item" data-index="22" onclick="selectHotspot(22)">
+                    <strong>Le petit atlas</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="23" onclick="selectHotspot(23)">
+                    <strong>d'Europe.j</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="24" onclick="selectHotspot(24)">
+                    <strong>Les Hymnes</strong> (1079,67)
+                </li>
+
+                <li class="hotspot-item" data-index="25" onclick="selectHotspot(25)">
+                    <strong>nationauxj</strong> (1079,67)
+                </li>
+
+                <li class="hotspot-item" data-index="26" onclick="selectHotspot(26)">
+                    <strong>Léonard</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="27" onclick="selectHotspot(27)">
+                    <strong>de Vincij</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="28" onclick="selectHotspot(28)">
+                    <strong>L'euro et nousj</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="29" onclick="selectHotspot(29)">
+                    <strong>Big</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="30" onclick="selectHotspot(30)">
+                    <strong>Ben</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="31" onclick="selectHotspot(31)">
+                    <strong>Le mur de</strong> (1768,42)
+                </li>
+
+                <li class="hotspot-item" data-index="32" onclick="selectHotspot(32)">
+                    <strong>Berlinj</strong> (1768,42)
+                </li>
+
+                <li class="hotspot-item" data-index="33" onclick="selectHotspot(33)">
+                    <strong>les corsaires</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="34" onclick="selectHotspot(34)">
+                    <strong>Les jeux</strong> (1408,51)
+                </li>
+
+                <li class="hotspot-item" data-index="35" onclick="selectHotspot(35)">
+                    <strong>Olympiquesj</strong> (1408,51)
+                </li>
+
+                <li class="hotspot-item" data-index="36" onclick="selectHotspot(36)">
+                    <strong>La cornemusej</strong> (1102,131)
+                </li>
+
+                <li class="hotspot-item" data-index="37" onclick="selectHotspot(37)">
+                    <strong>Les joyaux de</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="38" onclick="selectHotspot(38)">
+                    <strong>la couronne</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="39" onclick="selectHotspot(39)">
+                    <strong>d'Angleterrej</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="40" onclick="selectHotspot(40)">
+                    <strong>La tour Eiffelj</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="41" onclick="selectHotspot(41)">
+                    <strong>L'exposition</strong> (1580,99)
+                </li>
+
+                <li class="hotspot-item" data-index="42" onclick="selectHotspot(42)">
+                    <strong>universellej</strong> (1580,99)
+                </li>
+
+                <li class="hotspot-item" data-index="43" onclick="selectHotspot(43)">
+                    <strong>Un livre sur</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="44" onclick="selectHotspot(44)">
+                    <strong>la fabrication</strong> (21,227)
+                </li>
+
+                <li class="hotspot-item" data-index="45" onclick="selectHotspot(45)">
+                    <strong>de la bièrej</strong> (21,227)
+                </li>
+
+                <li class="hotspot-item" data-index="46" onclick="selectHotspot(46)">
+                    <strong>L'histoire</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="47" onclick="selectHotspot(47)">
+                    <strong>du chocolatj</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="48" onclick="selectHotspot(48)">
+                    <strong>Le fadoj</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="49" onclick="selectHotspot(49)">
+                    <strong>Les grands couturiersj</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="50" onclick="selectHotspot(50)">
+                    <strong>Les tulipesj</strong> (1128,199)
+                </li>
+
+                <li class="hotspot-item" data-index="51" onclick="selectHotspot(51)">
+                    <strong>Les grands</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="52" onclick="selectHotspot(52)">
+                    <strong>navigateursj</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="53" onclick="selectHotspot(53)">
+                    <strong>Louis</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="54" onclick="selectHotspot(54)">
+                    <strong>Pasteur</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="55" onclick="selectHotspot(55)">
+                    <strong>Balade à</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="56" onclick="selectHotspot(56)">
+                    <strong>Venisej</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="57" onclick="selectHotspot(57)">
+                    <strong>Ludwig Van Beethoven</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="58" onclick="selectHotspot(58)">
+                    <strong>Stonehenge</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="59" onclick="selectHotspot(59)">
+                    <strong>Une armoire bien remplie</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="60" onclick="selectHotspot(60)">
+                    <strong>SORTIEf</strong> (65,136)
+                </li>
+
+                <li class="hotspot-item" data-index="61" onclick="selectHotspot(61)">
+                    <strong>Madame euro</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="62" onclick="selectHotspot(62)">
+                    <strong>Une table avec plein de c</strong> (397,169)
+                </li>
+
+                <li class="hotspot-item" data-index="63" onclick="selectHotspot(63)">
+                    <strong>Il te faut un sac à dos</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="64" onclick="selectHotspot(64)">
+                    <strong>pour ranger tes objets</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="65" onclick="selectHotspot(65)">
+                    <strong>Il y a quelque chose</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="66" onclick="selectHotspot(66)">
+                    <strong>dans le chaudron</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="67" onclick="selectHotspot(67)">
+                    <strong>Il n'y a plus rien</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="68" onclick="selectHotspot(68)">
+                    <strong>dans le chaudroni</strong> (1803,164)
+                </li>
+
+                <li class="hotspot-item" data-index="69" onclick="selectHotspot(69)">
+                    <strong>Question Bonus</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="70" onclick="selectHotspot(70)">
+                    <strong>tu as déjà réponduk</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="71" onclick="selectHotspot(71)">
+                    <strong>Tu n'as pas le temps</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="72" onclick="selectHotspot(72)">
+                    <strong>de te reposer.</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="73" onclick="selectHotspot(73)">
+                    <strong>Un litd</strong> (752,115)
+                </li>
+
+                <li class="hotspot-item" data-index="74" onclick="selectHotspot(74)">
+                    <strong>Un message est caché</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="75" onclick="selectHotspot(75)">
+                    <strong>dans cette pièce, mais pa</strong> (414,40)
+                </li>
+
+                <li class="hotspot-item" data-index="76" onclick="selectHotspot(76)">
+                    <strong>Une étagèrej</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="77" onclick="selectHotspot(77)">
+                    <strong>SORTIE</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="78" onclick="selectHotspot(78)">
+                    <strong>Ordinateur du transvecteu</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="79" onclick="selectHotspot(79)">
+                    <strong>Une table à produitsi</strong> (311,173)
+                </li>
+
+                <li class="hotspot-item" data-index="80" onclick="selectHotspot(80)">
+                    <strong>Prof</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="81" onclick="selectHotspot(81)">
+                    <strong>Un diplômed</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="82" onclick="selectHotspot(82)">
+                    <strong>Le transvecteur</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="83" onclick="selectHotspot(83)">
+                    <strong>Un coffre fermé à cléi</strong> (174,258)
+                </li>
+
+                <li class="hotspot-item" data-index="84" onclick="selectHotspot(84)">
+                    <strong>Ordinateur du transvecteu</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="85" onclick="selectHotspot(85)">
+                    <strong>Sens de la visite</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="86" onclick="selectHotspot(86)">
+                    <strong>SORTIEf</strong> (98,49)
+                </li>
+
+                <li class="hotspot-item" data-index="87" onclick="selectHotspot(87)">
+                    <strong>Le conservateur du muséel</strong> (377,124)
+                </li>
+
+                <li class="hotspot-item" data-index="88" onclick="selectHotspot(88)">
+                    <strong>Le tableau de la légende.</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="89" onclick="selectHotspot(89)">
+                    <strong>Clique dessus si tu veux</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="90" onclick="selectHotspot(90)">
+                    <strong>revoir l'introduction.j</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="91" onclick="selectHotspot(91)">
+                    <strong>Question Bonus</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="92" onclick="selectHotspot(92)">
+                    <strong>Tu as déjà répondu</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="93" onclick="selectHotspot(93)">
+                    <strong>La momie du pharaon TOUTH</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="94" onclick="selectHotspot(94)">
+                    <strong>Un sac à dos</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="95" onclick="selectHotspot(95)">
+                    <strong>SORTIEh</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="96" onclick="selectHotspot(96)">
+                    <strong>Il y a une autre</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="97" onclick="selectHotspot(97)">
+                    <strong>bouteille en Europe</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="98" onclick="selectHotspot(98)">
+                    <strong>elle te sera utile si tu</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="99" onclick="selectHotspot(99)">
+                    <strong>la remplis d'eau.</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="100" onclick="selectHotspot(100)">
+                    <strong>Tu ne peux pas</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="101" onclick="selectHotspot(101)">
+                    <strong>prendre celles-ci.d</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="102" onclick="selectHotspot(102)">
+                    <strong>Une boîte d'allumettes</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="103" onclick="selectHotspot(103)">
+                    <strong>Il te faut un sac à dos p</strong> (432,74)
+                </li>
+
+                <li class="hotspot-item" data-index="104" onclick="selectHotspot(104)">
+                    <strong>Ces livres ne te</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="105" onclick="selectHotspot(105)">
+                    <strong>seront d'aucune</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="106" onclick="selectHotspot(106)">
+                    <strong>utilitéd</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="107" onclick="selectHotspot(107)">
+                    <strong>Quitter</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="108" onclick="selectHotspot(108)">
+                    <strong>La calculette</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="109" onclick="selectHotspot(109)">
+                    <strong>SORTIE</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="110" onclick="selectHotspot(110)">
+                    <strong>Quitter</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="111" onclick="selectHotspot(111)">
+                    <strong>Clique ici pour arrêter l</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="112" onclick="selectHotspot(112)">
+                    <strong>Quitter</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="113" onclick="selectHotspot(113)">
+                    <strong>Quitter</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="114" onclick="selectHotspot(114)">
+                    <strong>Quitter</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="115" onclick="selectHotspot(115)">
+                    <strong>SORTIE</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="116" onclick="selectHotspot(116)">
+                    <strong>Réponse N°1</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="117" onclick="selectHotspot(117)">
+                    <strong>Réponse N°2</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="118" onclick="selectHotspot(118)">
+                    <strong>Réponse N°3</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="119" onclick="selectHotspot(119)">
+                    <strong>Réponse N°1</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="120" onclick="selectHotspot(120)">
+                    <strong>Réponse N°2</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="121" onclick="selectHotspot(121)">
+                    <strong>Réponse N°3</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="122" onclick="selectHotspot(122)">
+                    <strong>Réponse N°1</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="123" onclick="selectHotspot(123)">
+                    <strong>Réponse N°2</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="124" onclick="selectHotspot(124)">
+                    <strong>Réponse N°3</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="125" onclick="selectHotspot(125)">
+                    <strong>Quitter</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="126" onclick="selectHotspot(126)">
+                    <strong>Réponse N°1</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="127" onclick="selectHotspot(127)">
+                    <strong>Réponse N°2</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="128" onclick="selectHotspot(128)">
+                    <strong>Réponse N°3</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="129" onclick="selectHotspot(129)">
+                    <strong>SORTIE</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="130" onclick="selectHotspot(130)">
+                    <strong>SORTIE</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="131" onclick="selectHotspot(131)">
+                    <strong>Du sirop pour la toux</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="132" onclick="selectHotspot(132)">
+                    <strong>Il te faut un sac à dos p</strong> (487,109)
+                </li>
+
+                <li class="hotspot-item" data-index="133" onclick="selectHotspot(133)">
+                    <strong>Des sachets de levure</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="134" onclick="selectHotspot(134)">
+                    <strong>Il te faut un sac à dos p</strong> (203,218)
+                </li>
+
+                <li class="hotspot-item" data-index="135" onclick="selectHotspot(135)">
+                    <strong>Une burette d'huile</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="136" onclick="selectHotspot(136)">
+                    <strong>Il te faut un sac à dos p</strong> (40,201)
+                </li>
+
+                <li class="hotspot-item" data-index="137" onclick="selectHotspot(137)">
+                    <strong>Des produits chimiquesd</strong> (108,39)
+                </li>
+
+                <li class="hotspot-item" data-index="138" onclick="selectHotspot(138)">
+                    <strong>Plan du transvecteur</strong> (418,212)
+                </li>
+
+                <li class="hotspot-item" data-index="139" onclick="selectHotspot(139)">
+                    <strong>Le maire d'Eurolandl</strong> (331,101)
+                </li>
+
+                <li class="hotspot-item" data-index="140" onclick="selectHotspot(140)">
+                    <strong>SORTIEh</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="141" onclick="selectHotspot(141)">
+                    <strong>La fontaine à couleursj</strong> (10,0)
+                </li>
+
+                <li class="hotspot-item" data-index="142" onclick="selectHotspot(142)">
+                    <strong>Sortie</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="143" onclick="selectHotspot(143)">
+                    <strong>Vide else playtext 280 26</strong> (106,255)
+                </li>
+
+                <li class="hotspot-item" data-index="144" onclick="selectHotspot(144)">
+                    <strong>Vide else playtext 280 26</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="145" onclick="selectHotspot(145)">
+                    <strong>Vide else playtext 280 26</strong> (71,134)
+                </li>
+
+                <li class="hotspot-item" data-index="146" onclick="selectHotspot(146)">
+                    <strong>Vide else playtext 280 26</strong> (115,76)
+                </li>
+
+                <li class="hotspot-item" data-index="147" onclick="selectHotspot(147)">
+                    <strong>Vide else playtext 280 26</strong> (210,45)
+                </li>
+
+                <li class="hotspot-item" data-index="148" onclick="selectHotspot(148)">
+                    <strong>Vide else playtext 280 26</strong> (307,41)
+                </li>
+
+                <li class="hotspot-item" data-index="149" onclick="selectHotspot(149)">
+                    <strong>Vide else playtext 280 26</strong> (390,58)
+                </li>
+
+                <li class="hotspot-item" data-index="150" onclick="selectHotspot(150)">
+                    <strong>Vide else playtext 280 26</strong> (458,106)
+                </li>
+
+                <li class="hotspot-item" data-index="151" onclick="selectHotspot(151)">
+                    <strong>Vide else playtext 280 26</strong> (484,169)
+                </li>
+
+                <li class="hotspot-item" data-index="152" onclick="selectHotspot(152)">
+                    <strong>Vide else playtext 280 26</strong> (451,241)
+                </li>
+
+                <li class="hotspot-item" data-index="153" onclick="selectHotspot(153)">
+                    <strong>Vide else playtext 280 26</strong> (336,279)
+                </li>
+
+                <li class="hotspot-item" data-index="154" onclick="selectHotspot(154)">
+                    <strong>Vide else playtext 280 26</strong> (210,297)
+                </li>
+
+                <li class="hotspot-item" data-index="155" onclick="selectHotspot(155)">
+                    <strong>Un Parchemin</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="156" onclick="selectHotspot(156)">
+                    <strong>Une question à 50 euros.</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="157" onclick="selectHotspot(157)">
+                    <strong>Si tu réponds juste, la s</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="158" onclick="selectHotspot(158)">
+                    <strong>est pour toi, sinon tu pe</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="159" onclick="selectHotspot(159)">
+                    <strong>Veux tu tenter ta chance </strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="160" onclick="selectHotspot(160)">
+                    <strong>La réponse se trouve dans</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="161" onclick="selectHotspot(161)">
+                    <strong>la bibliothéque.</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="162" onclick="selectHotspot(162)">
+                    <strong>Bien joué la question .</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="163" onclick="selectHotspot(163)">
+                    <strong>Quitteri</strong> (518,356)
+                </li>
+
+                <li class="hotspot-item" data-index="164" onclick="selectHotspot(164)">
+                    <strong>SORTIE</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="165" onclick="selectHotspot(165)">
+                    <strong>SORTIE</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="166" onclick="selectHotspot(166)">
+                    <strong>dossier euro</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="167" onclick="selectHotspot(167)">
+                    <strong>SORTIE</strong> (2,303)
+                </li>
+
+                <li class="hotspot-item" data-index="168" onclick="selectHotspot(168)">
+                    <strong>Une bouteille vided</strong> (321,14)
+                </li>
+
+                <li class="hotspot-item" data-index="169" onclick="selectHotspot(169)">
+                    <strong>SORTIE</strong> (no poly)
+                </li>
+
+                <li class="hotspot-item" data-index="170" onclick="selectHotspot(170)">
+                    <strong>euros ! ! !i</strong> (no poly)
+                </li>
+
+            </ul>
+
+            <div id="details">
+                <em>Click a hotspot to see details</em>
+            </div>
+        </div>
+    </div>
+
+    <div id="tooltip" class="tooltip"></div>
+
+    <script>
+        const hotspots = [{"name": "La biblioth\u00e8que\u0003", "text_bbox": [57, 60, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "La banque\u0001", "text_bbox": [387, 351, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Ma maison\u0001", "text_bbox": [89, 375, 125, 365], "polygon": [[9, 385], [50, 395], [149, 355], [145, 277], [38, 192], [1, 248]], "polygon_bbox": [1, 192, 149, 395], "commands": []}, {"name": "La maison de prof\u0001", "text_bbox": [387, 18, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Le mus\u00e9e du village\u0001", "text_bbox": [249, 297, 125, 365], "polygon": [[287, 267], [270, 238], [273, 198], [270, 181], [315, 149], [347, 136], [388, 162], [417, 190], [405, 203], [411, 245], [383, 280]], "polygon_bbox": [270, 136, 417, 280], "commands": []}, {"name": "La fontaine \u00e0 couleurs\u0001", "text_bbox": [348, 357, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "SORTIE\u0003", "text_bbox": [40, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "L'agenda du banquierj", "text_bbox": [40, 350, 125, 365], "polygon": [[360, 210], [448, 242], [413, 344], [318, 306]], "polygon_bbox": [318, 210, 448, 344], "commands": []}, {"name": "Une tasse de caf\u00e9 noird", "text_bbox": [40, 350, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Une bouteille d'encre noire\u0001", "text_bbox": [40, 350, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Dossier euroj", "text_bbox": [40, 350, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "SORTIE\u0003", "text_bbox": [90, 350, 600, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Le banquier d'Eurolandl", "text_bbox": [160, 350, 125, 365], "polygon": [[184, 340], [194, 215], [206, 181], [177, 158], [213, 123], [312, 132], [332, 171], [308, 194], [321, 291], [317, 340]], "polygon_bbox": [177, 123, 332, 340], "commands": []}, {"name": "Un coffre forti", "text_bbox": [5, 365, 125, 400], "polygon": null, "polygon_bbox": null, "commands": ["milleeuro >= 1 then addbmp coffre euroland\\rollover\\coffre.bmp 0 0 203 else delbmp coffre"]}, {"name": "Question Bonus", "text_bbox": [310, 75, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["bonus3 = 0 then playwav bruit\\boing.wav 1\u0001", "bonus3 = 0 then set_var bonus3 1\u0001", "bonus3 = 1 then scene 35"]}, {"name": "tu as d\u00e9j\u00e0 r\u00e9ponduk", "text_bbox": [310, 75, 125, 365], "polygon": [[451, 17], [552, 10], [556, 133], [450, 138]], "polygon_bbox": [450, 10, 556, 138], "commands": ["bonus3 = 0 then playwav bruit\\boing.wav 1\u0001", "bonus3 = 0 then set_var bonus3 1\u0001", "bonus3 = 1 then scene 35"]}, {"name": "Le bureau du banquierj", "text_bbox": [380, 330, 639, 365], "polygon": null, "polygon_bbox": null, "commands": ["bonus3 = 0 then playwav bruit\\boing.wav 1\u0001", "bonus3 = 0 then set_var bonus3 1\u0001", "bonus3 = 1 then scene 35"]}, {"name": "SORTIE\u0003", "text_bbox": [220, 350, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Le livre des", "text_bbox": [380, 210, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "recettes d'Europej", "text_bbox": [380, 225, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "La biblioth\u00e9caire d'Euroland\u0002", "text_bbox": [850, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Une lampe de bureaud", "text_bbox": [1030, 290, 125, 365], "polygon": [[989, 262], [1018, 213], [1057, 212], [1112, 290], [1061, 294], [1060, 265]], "polygon_bbox": [989, 212, 1112, 294], "commands": ["telephone = 1 then addbmp tt euroland\\rollover\\maintel.bmp 0 732 240\u0001", "telephone = 0 then scene 16l"]}, {"name": "Le petit atlas", "text_bbox": [1385, 212, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["telephone = 0 then scene 16l"]}, {"name": "d'Europe.j", "text_bbox": [1385, 232, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["telephone = 0 then scene 16l"]}, {"name": "Les Hymnes", "text_bbox": [1120, 142, 125, 365], "polygon": [[1079, 99], [1198, 67], [1200, 122], [1083, 140]], "polygon_bbox": [1079, 67, 1200, 140], "commands": []}, {"name": "nationauxj", "text_bbox": [1120, 162, 125, 365], "polygon": [[1079, 99], [1198, 67], [1200, 122], [1083, 140]], "polygon_bbox": [1079, 67, 1200, 140], "commands": []}, {"name": "L\u00e9onard", "text_bbox": [355, 22, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "de Vincij", "text_bbox": [355, 42, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "L'euro et nousj", "text_bbox": [375, 362, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Big", "text_bbox": [700, 12, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Ben\u0001", "text_bbox": [700, 32, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Le mur de", "text_bbox": [1740, 2, 125, 365], "polygon": [[1768, 178], [1769, 81], [1807, 46], [1874, 42], [1878, 148]], "polygon_bbox": [1768, 42, 1878, 178], "commands": []}, {"name": "Berlinj", "text_bbox": [1740, 22, 125, 365], "polygon": [[1768, 178], [1769, 81], [1807, 46], [1874, 42], [1878, 148]], "polygon_bbox": [1768, 42, 1878, 178], "commands": []}, {"name": "les corsaires\u0001", "text_bbox": [1350, 332, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Les jeux", "text_bbox": [1440, 22, 125, 365], "polygon": [[1408, 112], [1444, 51], [1537, 54], [1508, 114]], "polygon_bbox": [1408, 51, 1537, 114], "commands": []}, {"name": "Olympiquesj", "text_bbox": [1440, 42, 125, 365], "polygon": [[1408, 112], [1444, 51], [1537, 54], [1508, 114]], "polygon_bbox": [1408, 51, 1537, 114], "commands": []}, {"name": "La cornemusej", "text_bbox": [1100, 100, 125, 365], "polygon": [[1104, 148], [1200, 131], [1201, 193], [1102, 196]], "polygon_bbox": [1102, 131, 1201, 196], "commands": []}, {"name": "Les joyaux de", "text_bbox": [410, 330, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "la couronne", "text_bbox": [410, 345, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "d'Angleterrej", "text_bbox": [410, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "La tour Eiffelj", "text_bbox": [900, 182, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "L'exposition", "text_bbox": [1600, 62, 125, 365], "polygon": [[1580, 125], [1743, 99], [1742, 176], [1581, 188]], "polygon_bbox": [1580, 99, 1743, 188], "commands": []}, {"name": "universellej", "text_bbox": [1600, 82, 125, 365], "polygon": [[1580, 125], [1743, 99], [1742, 176], [1581, 188]], "polygon_bbox": [1580, 99, 1743, 188], "commands": []}, {"name": "Un livre sur", "text_bbox": [120, 322, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "la fabrication", "text_bbox": [120, 342, 125, 365], "polygon": [[31, 260], [21, 246], [29, 227], [77, 228], [75, 257]], "polygon_bbox": [21, 227, 77, 260], "commands": []}, {"name": "de la bi\u00e8rej", "text_bbox": [120, 362, 125, 365], "polygon": [[31, 260], [21, 246], [29, 227], [77, 228], [75, 257]], "polygon_bbox": [21, 227, 77, 260], "commands": []}, {"name": "L'histoire", "text_bbox": [950, 162, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "du chocolatj", "text_bbox": [950, 182, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Le fadoj", "text_bbox": [515, 44, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Les grands couturiersj", "text_bbox": [1300, 280, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Les tulipesj", "text_bbox": [1110, 260, 125, 365], "polygon": [[1128, 203], [1203, 199], [1204, 261], [1135, 258]], "polygon_bbox": [1128, 199, 1204, 261], "commands": []}, {"name": "Les grands", "text_bbox": [1450, 262, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "navigateursj", "text_bbox": [1450, 282, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Louis", "text_bbox": [380, 150, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Pasteur\u0001", "text_bbox": [380, 165, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Balade \u00e0", "text_bbox": [395, 222, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Venisej", "text_bbox": [395, 242, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Ludwig Van Beethoven\u0001", "text_bbox": [395, 362, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Stonehenge\u0001", "text_bbox": [950, 162, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Une armoire bien remplie\u0003", "text_bbox": [1400, 350, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "SORTIEf", "text_bbox": [95, 350, 125, 365], "polygon": [[65, 300], [72, 168], [87, 136], [181, 142], [230, 188], [227, 272], [221, 300]], "polygon_bbox": [65, 136, 230, 300], "commands": []}, {"name": "Madame euro\u0001", "text_bbox": [120, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Une table avec plein de choses dessus\u0001", "text_bbox": [370, 340, 125, 365], "polygon": [[579, 271], [496, 271], [413, 262], [397, 241], [436, 227], [462, 211], [475, 211], [478, 174], [502, 169], [509, 203], [524, 203], [537, 223], [574, 233], [610, 262]], "polygon_bbox": [397, 169, 610, 271], "commands": []}, {"name": "Il te faut un sac \u00e0 dos\u0001", "text_bbox": [1540, 190, 1700, 210], "polygon": null, "polygon_bbox": null, "commands": ["sacados = 1 then if clejaune = 0 then set_var clejaune 1\u0001", "clejaune = 0 then addbmp clejaune euroland\\rollover\\clejaune.bmp 0 1794 178\u0001"]}, {"name": "pour ranger tes objets\u0001", "text_bbox": [1540, 210, 1700, 230], "polygon": null, "polygon_bbox": null, "commands": ["sacados = 1 then if clejaune = 0 then set_var clejaune 1\u0001", "clejaune = 0 then addbmp clejaune euroland\\rollover\\clejaune.bmp 0 1794 178\u0001"]}, {"name": "Il y a quelque chose", "text_bbox": [1440, 350, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["clejaune = 0 then addbmp clejaune euroland\\rollover\\clejaune.bmp 0 1794 178"]}, {"name": "dans le chaudron", "text_bbox": [1440, 370, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["clejaune = 0 then addbmp clejaune euroland\\rollover\\clejaune.bmp 0 1794 178"]}, {"name": "Il n'y a plus rien", "text_bbox": [1440, 350, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["clejaune = 0 then addbmp clejaune euroland\\rollover\\clejaune.bmp 0 1794 178"]}, {"name": "dans le chaudroni", "text_bbox": [1440, 370, 125, 365], "polygon": [[1810, 221], [1803, 196], [1828, 164], [1850, 173], [1850, 191], [1862, 203], [1863, 222]], "polygon_bbox": [1803, 164, 1863, 222], "commands": ["clejaune = 0 then addbmp clejaune euroland\\rollover\\clejaune.bmp 0 1794 178"]}, {"name": "Question Bonus", "text_bbox": [680, 350, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["bonus1 = 0 then playwav bruit\\boing.wav 1\u0001", "bonus1 = 0 then set_var bonus1 1\u0001", "bonus1 = 1 then scene 35"]}, {"name": "tu as d\u00e9j\u00e0 r\u00e9ponduk", "text_bbox": [680, 350, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["bonus1 = 0 then playwav bruit\\boing.wav 1\u0001", "bonus1 = 0 then set_var bonus1 1\u0001", "bonus1 = 1 then scene 35"]}, {"name": "Tu n'as pas le temps\u0001", "text_bbox": [800, 350, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["bonus1 = 0 then playwav bruit\\boing.wav 1\u0001", "bonus1 = 0 then set_var bonus1 1\u0001", "bonus1 = 1 then scene 35"]}, {"name": "de te reposer.", "text_bbox": [800, 370, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["bonus1 = 0 then playwav bruit\\boing.wav 1\u0001", "bonus1 = 0 then set_var bonus1 1\u0001", "bonus1 = 1 then scene 35"]}, {"name": "Un litd", "text_bbox": [990, 350, 125, 365], "polygon": [[770, 345], [752, 123], [892, 129], [939, 243], [1018, 255], [1019, 115], [1142, 121], [1130, 357], [1049, 393]], "polygon_bbox": [752, 115, 1142, 393], "commands": ["bonus1 = 0 then set_var bonus1 1\u0001", "bonus1 = 1 then scene 35"]}, {"name": "Un message est cach\u00e9", "text_bbox": [380, 320, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "dans cette pi\u00e8ce, mais pas ici.d", "text_bbox": [380, 340, 125, 365], "polygon": [[416, 44], [414, 97], [520, 106], [500, 40]], "polygon_bbox": [414, 40, 520, 106], "commands": []}, {"name": "Une \u00e9tag\u00e8rej", "text_bbox": [1090, 350, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "SORTIE\u0001", "text_bbox": [60, 340, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Ordinateur du transvecteur\u0001", "text_bbox": [1430, 150, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["danemark = 1  then set_var danemark 0\u0003", "portugal = 1  then set_var portugal 0\u0003", "suede = 1  then set_var suede 0\u0003"]}, {"name": "Une table \u00e0 produitsi", "text_bbox": [340, 300, 125, 365], "polygon": [[311, 291], [312, 237], [349, 188], [406, 179], [532, 173], [559, 239], [600, 274], [605, 298]], "polygon_bbox": [311, 173, 605, 298], "commands": ["portugal = 1  then set_var portugal 0\u0003", "suede = 1  then set_var suede 0\u0003"]}, {"name": "Prof\u0001", "text_bbox": [690, 350, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Un dipl\u00f4med", "text_bbox": [200, 40, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Le transvecteur\u0001", "text_bbox": [1590, 150, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Un coffre ferm\u00e9 \u00e0 cl\u00e9i", "text_bbox": [65, 350, 125, 365], "polygon": [[174, 337], [174, 283], [191, 258], [286, 269], [307, 277], [310, 338], [269, 354]], "polygon_bbox": [174, 258, 310, 354], "commands": ["cleverte = 2 then playwav porte2.wav 1\u0001", "cleverte = 2 then set_var cleverte -1\u0001", "cleverte = -1 then scene 44\u0001"]}, {"name": "Ordinateur du transvecteur\u0001", "text_bbox": [830, 350, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["cleverte = 2 then set_var cleverte -1\u0001", "cleverte = -1 then scene 44\u0001"]}, {"name": "Sens de la visite\u0003", "text_bbox": [1540, 370, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "SORTIEf", "text_bbox": [150, 320, 125, 365], "polygon": [[98, 245], [100, 90], [149, 52], [212, 49], [275, 89], [289, 246]], "polygon_bbox": [98, 49, 289, 246], "commands": []}, {"name": "Le conservateur du mus\u00e9el", "text_bbox": [360, 350, 125, 365], "polygon": [[397, 328], [400, 290], [377, 253], [396, 149], [426, 130], [480, 124], [480, 151], [479, 189], [506, 269], [474, 287], [508, 331], [451, 334]], "polygon_bbox": [377, 124, 508, 334], "commands": []}, {"name": "Le tableau de la l\u00e9gende.", "text_bbox": [760, 220, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Clique dessus si tu veux", "text_bbox": [760, 240, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "revoir l'introduction.j", "text_bbox": [760, 260, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Question Bonus", "text_bbox": [1050, 40, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Tu as d\u00e9j\u00e0 r\u00e9pondu\u0001", "text_bbox": [1050, 40, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "La momie du pharaon TOUTHENEUROd", "text_bbox": [1980, 340, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["bonus2 = 1 then scene 35k"]}, {"name": "Un sac \u00e0 dos\u0003", "text_bbox": [100, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["sacados = 0 then scene 9"]}, {"name": "SORTIEh", "text_bbox": [280, 370, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["allumette != 0 then addbmp al euroland\\rollover\\allumette2.bmp 0 360 36\u0002", "sacados  != 0 then addbmp lesac euroland\\rollover\\sac2.bmp  0 52 177d"]}, {"name": "Il y a une autre", "text_bbox": [230, 50, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["allumette != 0 then addbmp al euroland\\rollover\\allumette2.bmp 0 360 36\u0002", "sacados  != 0 then addbmp lesac euroland\\rollover\\sac2.bmp  0 52 177d"]}, {"name": "bouteille en Europe", "text_bbox": [230, 70, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["allumette != 0 then addbmp al euroland\\rollover\\allumette2.bmp 0 360 36\u0002", "sacados  != 0 then addbmp lesac euroland\\rollover\\sac2.bmp  0 52 177d"]}, {"name": "elle te sera utile si tu", "text_bbox": [230, 90, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["!= 0 then addbmp al euroland\\rollover\\allumette2.bmp 0 360 36\u0002", "sacados  != 0 then addbmp lesac euroland\\rollover\\sac2.bmp  0 52 177d"]}, {"name": "la remplis d'eau.", "text_bbox": [230, 110, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["sacados  != 0 then addbmp lesac euroland\\rollover\\sac2.bmp  0 52 177d"]}, {"name": "Tu ne peux pas", "text_bbox": [230, 130, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "prendre celles-ci.d", "text_bbox": [230, 150, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Une bo\u00eete d'allumettes\u0001", "text_bbox": [400, 60, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Il te faut un sac \u00e0 dos pour le mettre dedansd", "text_bbox": [20, 370, 125, 365], "polygon": [[434, 126], [432, 105], [531, 74], [554, 97], [559, 121], [469, 143]], "polygon_bbox": [432, 74, 559, 143], "commands": ["sacados = 1 then if allumette = 0 then set_var allumette 1\u0001", "allumette != 0 then addbmp al euroland\\rollover\\allumette2.bmp 0 360 36\u0001"]}, {"name": "Ces livres ne te", "text_bbox": [400, 340, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["sacados = 1 then if allumette = 0 then set_var allumette 1\u0001", "allumette != 0 then addbmp al euroland\\rollover\\allumette2.bmp 0 360 36\u0001"]}, {"name": "seront d'aucune", "text_bbox": [400, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["sacados = 1 then if allumette = 0 then set_var allumette 1\u0001", "allumette != 0 then addbmp al euroland\\rollover\\allumette2.bmp 0 360 36\u0001"]}, {"name": "utilit\u00e9d", "text_bbox": [400, 380, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["sacados = 1 then if allumette = 0 then set_var allumette 1\u0001", "allumette != 0 then addbmp al euroland\\rollover\\allumette2.bmp 0 360 36\u0001"]}, {"name": "Quitter\u0003", "text_bbox": [455, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "La calculette\u0002", "text_bbox": [320, 180, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "SORTIE\u0001", "text_bbox": [250, 370, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["calc = 0 then addbmp calc euroland\\rollover\\calc2.bmp 0 282 95\u0003", "calc = 0 then playwav bruit\\Siren.wav 2\u0001"]}, {"name": "Quitter\u0003", "text_bbox": [455, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Clique ici pour arr\u00eater la machine.\u0001", "text_bbox": [130, 200, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Quitter\u0003", "text_bbox": [455, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["then if active = 4 then scene 12i", "score < 0 then runprj ..\\couleurs1\\couleurs1.vnp 54 else scene 15d"]}, {"name": "Quitter\u0003", "text_bbox": [455, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Quitter\u0003", "text_bbox": [455, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "SORTIE\u0003", "text_bbox": [440, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "R\u00e9ponse N\u00b01\u0002", "text_bbox": [60, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "R\u00e9ponse N\u00b02\u0001", "text_bbox": [260, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["bonus5 = 1 then playwav cartoon.wav 1\u0001", "bonus3 = 1 then playwav cling.wav 1\u0001", "bonus3 = 1 then scene 3\u0001"]}, {"name": "R\u00e9ponse N\u00b03\u0001", "text_bbox": [410, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["bonus5 = 1 then playwav cartoon.wav 1\u0001", "bonus3 = 1 then playwav cartoon.wav 1\u0001", "bonus3 = 1 then scene 3\u0001"]}, {"name": "R\u00e9ponse N\u00b01\u0002", "text_bbox": [60, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "R\u00e9ponse N\u00b02\u0001", "text_bbox": [260, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["bonus8 = 1 then playwav cartoon.wav 1\u0001", "bonus9 = 1 then playwav cling.wav 1\u0001"]}, {"name": "R\u00e9ponse N\u00b03\u0001", "text_bbox": [410, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["bonus8 = 1 then playwav cartoon.wav 1\u0001", "bonus9 = 1 then playwav cartoon.wav 1\u0001"]}, {"name": "R\u00e9ponse N\u00b01\u0002", "text_bbox": [60, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["bonus9 = 1 then playwav cartoon.wav 1\u0001"]}, {"name": "R\u00e9ponse N\u00b02\u0001", "text_bbox": [260, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["bonus5 = 1 then playwav cartoon.wav 1\u0001", "bonus6 = 1 then playwav cling.wav 1\u0001"]}, {"name": "R\u00e9ponse N\u00b03\u0001", "text_bbox": [410, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["bonus5 = 1 then playwav cartoon.wav 1\u0001", "bonus6 = 1 then playwav cartoon.wav 1\u0001"]}, {"name": "Quitter\u0003", "text_bbox": [485, 420, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["bonus6 = 1 then playwav cartoon.wav 1\u0001"]}, {"name": "R\u00e9ponse N\u00b01\u0001", "text_bbox": [60, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "R\u00e9ponse N\u00b02\u0001", "text_bbox": [260, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["bonus3 = 1 then playwav cling.wav 1\u0001", "bonus3 = 1 then scene 3\u0001"]}, {"name": "R\u00e9ponse N\u00b03\u0001", "text_bbox": [410, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["bonus2 = 1 then scene 7\u0001", "bonus3 = 1 then playwav cartoon.wav 1\u0001", "bonus3 = 1 then scene 3\u0001"]}, {"name": "SORTIE\u0003", "text_bbox": [55, 350, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["bonus3 = 1 then playwav cartoon.wav 1\u0001", "bonus3 = 1 then scene 3\u0001", "bonus3 = 1 then set_var bonus3 2i"]}, {"name": "SORTIE\u0001", "text_bbox": [300, 350, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["calc = 1 then addbmp calc1  ..\\..\\barre\\images\\calc1.bmp 6 246 400", "telephone = 1 then addbmp telep  ..\\..\\barre\\images\\telep.bmp 6 316 400", "sacados = 1 then addbmp sac  ..\\..\\barre\\images\\sac.bmp 6 384 400d"]}, {"name": "Du sirop pour la toux\u0001", "text_bbox": [440, 60, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["levure != 0 then addbmp levure rollover\\levure2.bmp 0 205 189\u0002", "sirop != 0 then addbmp sirop rollover\\sirop2.bmp 0  464 0\u0002", "burette != 0 then addbmp burette rollover\\burette2.bmp 0 0 191h"]}, {"name": "Il te faut un sac \u00e0 dos pour ranger tes objetsd", "text_bbox": [20, 350, 105, 365], "polygon": [[491, 176], [513, 186], [539, 177], [543, 159], [537, 118], [510, 109], [496, 118], [487, 152]], "polygon_bbox": [487, 109, 543, 186], "commands": ["burette != 0 then addbmp burette rollover\\burette2.bmp 0 0 191h", "sacados = 1 then if sirop = 0 then set_var sirop 1\u0001", "sirop != 0 then addbmp sirop rollover\\sirop2.bmp 0 464 0\u0001"]}, {"name": "Des sachets de levure\u0001", "text_bbox": [150, 290, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["sacados = 1 then if sirop = 0 then set_var sirop 1\u0001", "sirop != 0 then addbmp sirop rollover\\sirop2.bmp 0 464 0\u0001"]}, {"name": "Il te faut un sac \u00e0 dos pour ranger tes objetsd", "text_bbox": [20, 350, 125, 365], "polygon": [[203, 267], [209, 220], [287, 218], [284, 265]], "polygon_bbox": [203, 218, 287, 267], "commands": ["sacados = 1 then if levure = 0 then set_var levure 1\u0001", "levure != 0 then addbmp levure rollover\\levure2.bmp 0 205 189\u0001"]}, {"name": "Une burette d'huile\u0001", "text_bbox": [50, 290, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["sacados = 1 then if levure = 0 then set_var levure 1\u0001", "levure != 0 then addbmp levure rollover\\levure2.bmp 0 205 189\u0001"]}, {"name": "Il te faut un sac \u00e0 dos pour ranger tes objetsd", "text_bbox": [20, 350, 125, 365], "polygon": [[40, 280], [42, 225], [82, 201], [122, 218], [117, 279]], "polygon_bbox": [40, 201, 122, 280], "commands": ["sacados = 1 then if burette = 0 then set_var burette 1\u0001", "burette != 0 then addbmp burette rollover\\burette2.bmp 0 0 191\u0001"]}, {"name": "Des produits chimiquesd", "text_bbox": [400, 140, 125, 365], "polygon": [[163, 218], [108, 193], [128, 126], [145, 49], [181, 39], [507, 43], [520, 100], [483, 135], [491, 188], [404, 211], [383, 241], [341, 246], [307, 232], [298, 187], [261, 188], [223, 215]], "polygon_bbox": [108, 39, 520, 246], "commands": ["sacados = 1 then if burette = 0 then set_var burette 1\u0001", "burette != 0 then addbmp burette rollover\\burette2.bmp 0 0 191\u0001"]}, {"name": "Plan du transvecteur\u0001", "text_bbox": [300, 300, 125, 365], "polygon": [[418, 227], [492, 212], [580, 268], [491, 291]], "polygon_bbox": [418, 212, 580, 291], "commands": []}, {"name": "Le maire d'Eurolandl", "text_bbox": [180, 300, 320, 365], "polygon": [[384, 359], [336, 347], [361, 302], [331, 287], [350, 216], [358, 102], [459, 101], [471, 202], [498, 273], [475, 301], [461, 370]], "polygon_bbox": [331, 101, 498, 370], "commands": []}, {"name": "SORTIEh", "text_bbox": [280, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "La fontaine \u00e0 couleursj", "text_bbox": [55, 320, 125, 325], "polygon": [[10, 260], [50, 230], [90, 225], [90, 0], [190, 0], [190, 225], [225, 230], [260, 260], [140, 270]], "polygon_bbox": [10, 0, 260, 270], "commands": []}, {"name": "Sortie\u0001", "text_bbox": [55, 360, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Vide else playtext 280 260 125 365 0 Activ\u00e9i", "text_bbox": [280, 260, 125, 365], "polygon": [[106, 306], [120, 270], [156, 255], [188, 284], [177, 323], [136, 336]], "polygon_bbox": [106, 255, 188, 336], "commands": ["occupe1 = 1 then addbmp f1 rollover\\b1.bmp 0 118 258\u0001", "occupe1 = 1 then addbmp f1 rollover\\b1.bmp 0 118 258\u0001", "occupe1 = 1 then addbmp f1 rollover\\b1.bmp 0 118 258"]}, {"name": "Vide else playtext 280 260 125 365 0 Activ\u00e9\u0002", "text_bbox": [280, 260, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["occupe2 = 1 then addbmp f2 rollover\\b2.bmp 0 56 203\u0001", "occupe2 = 1 then addbmp f2 rollover\\b2.bmp 0 56 202"]}, {"name": "Vide else playtext 280 260 125 365 0 Activ\u00e9i", "text_bbox": [280, 260, 125, 365], "polygon": [[71, 182], [75, 154], [95, 134], [120, 134], [135, 157], [98, 185]], "polygon_bbox": [71, 134, 135, 185], "commands": ["occupe3 = 1 then addbmp f3 rollover\\b3.bmp 0 69 132\u0001", "occupe3 = 1 then addbmp f3 rollover\\b3.bmp 0 69 132\u0001", "occupe3 = 1 then addbmp f3 rollover\\b3.bmp 0 69 132"]}, {"name": "Vide else playtext 280 260 125 365 0 Activ\u00e9i", "text_bbox": [280, 260, 125, 365], "polygon": [[115, 106], [140, 76], [190, 94], [155, 128]], "polygon_bbox": [115, 76, 190, 128], "commands": ["occupe4 = 1 then addbmp f4 rollover\\b4.bmp  0 121 76\u0001", "occupe4 = 1 then addbmp f4 rollover\\b4.bmp 0 121 76\u0001", "occupe4 = 1 then addbmp f4 rollover\\b4.bmp 0 121 76"]}, {"name": "Vide else playtext 280 260 125 365 0 Activ\u00e9i", "text_bbox": [280, 260, 125, 365], "polygon": [[210, 90], [220, 50], [245, 45], [265, 80]], "polygon_bbox": [210, 45, 265, 90], "commands": ["occupe5 = 1 then addbmp f5 rollover\\b5.bmp 0 208 42\u0001", "occupe5 = 1 then addbmp f5 rollover\\b5.bmp 0 208 42\u0001", "occupe5 = 1 then addbmp f5 rollover\\b5.bmp 0 208 42"]}, {"name": "Vide else playtext 280 260 125 365 0 Activ\u00e9i", "text_bbox": [280, 260, 125, 365], "polygon": [[307, 70], [323, 41], [350, 45], [360, 80]], "polygon_bbox": [307, 41, 360, 80], "commands": ["occupe6 = 1 then addbmp f6 rollover\\b6.bmp 0 309 39\u0001", "occupe6 = 1 then addbmp f6 rollover\\b6.bmp 0 309 39\u0001", "occupe6 = 1 then addbmp f6 rollover\\b6.bmp 0 309 39"]}, {"name": "Vide else playtext 280 260 125 365 0 Activ\u00e9i", "text_bbox": [280, 260, 125, 365], "polygon": [[390, 90], [428, 105], [447, 93], [438, 67], [406, 58]], "polygon_bbox": [390, 58, 447, 105], "commands": ["occupe7 = 1 then addbmp f7 rollover\\b7.bmp 0 392 58\u0001", "occupe7 = 1 then addbmp f7 rollover\\b7.bmp 0 392 58\u0001", "occupe7 = 1 then addbmp f7 rollover\\b7.bmp 0 392 58"]}, {"name": "Vide else playtext 280 260 125 365 0 Activ\u00e9", "text_bbox": [280, 260, 125, 365], "polygon": [[492, 158], [461, 135], [458, 113], [475, 106], [504, 115], [516, 140], [514, 158]], "polygon_bbox": [458, 106, 516, 158], "commands": ["occupe8 = 1 then addbmp f8 rollover\\b8.bmp 0 456 110\u0001", "occupe8 = 1 then addbmp f8 rollover\\b8.bmp 0 456 110\u0001", "occupe8 = 1 then addbmp f8 rollover\\b8.bmp 0 456 110"]}, {"name": "Vide else playtext 280 260 125 365 0 Activ\u00e9i", "text_bbox": [280, 260, 125, 365], "polygon": [[537, 227], [503, 221], [484, 192], [492, 173], [524, 169], [546, 199]], "polygon_bbox": [484, 169, 546, 227], "commands": ["occupe9 = 1 then addbmp f9 rollover\\b9.bmp 0 477 172\u0001", "occupe9 = 1 then addbmp f9 rollover\\b9.bmp 0 477 172\u0001", "occupe9 = 1 then addbmp f9 rollover\\b9.bmp 0 477 172"]}, {"name": "Vide else playtext 280 260 125 365 0 Activ\u00e9i", "text_bbox": [280, 260, 125, 365], "polygon": [[493, 311], [451, 289], [456, 245], [492, 241], [520, 279]], "polygon_bbox": [451, 241, 520, 311], "commands": ["occupe10 = 1 then addbmp f10 rollover\\b91.bmp 00 443 238\u0001", "occupe10 = 1 then addbmp f10 rollover\\b91.bmp 0 443 238\u0001", "occupe10 = 1 then addbmp f10 rollover\\b91.bmp 0 443 238"]}, {"name": "Vide else playtext 280 260 125 365 0 Activ\u00e9i", "text_bbox": [280, 260, 125, 365], "polygon": [[362, 366], [336, 326], [349, 294], [386, 279], [422, 309], [422, 349]], "polygon_bbox": [336, 279, 422, 366], "commands": ["occupe11 = 1 then addbmp f11 rollover\\b92.bmp 0 345 293\u0001", "occupe11 = 1 then addbmp f11 rollover\\b92.bmp 0 345 293\u0001", "occupe11 = 1 then addbmp f11 rollover\\b92.bmp 0 345 293"]}, {"name": "Vide else playtext 280 260 125 365 0 Activ\u00e9i", "text_bbox": [280, 260, 125, 365], "polygon": [[220, 365], [210, 332], [227, 302], [257, 297], [284, 308], [293, 342], [265, 378]], "polygon_bbox": [210, 297, 293, 378], "commands": ["occupe12 = 1 then addbmp f12 rollover\\b93.bmp  0 216 302\u0001", "occupe12 = 1 then addbmp f12 rollover\\b93.bmp 0 216 302\u0001", "occupe12 = 1 then addbmp f12 rollover\\b93.bmp 0 216 302"]}, {"name": "Un Parchemin\u0001", "text_bbox": [100, 303, 125, 365], "polygon": null, "polygon_bbox": null, "commands": ["score <= 0 then addbmp d3 d3.bmp 0 0 40\u0003", "score >= 0 then addbmp d2 d2.bmp 0 0 40\u0003"]}, {"name": "Une question \u00e0 50 euros.", "text_bbox": [300, 283, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Si tu r\u00e9ponds juste, la somme", "text_bbox": [300, 303, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "est pour toi, sinon tu perds", "text_bbox": [300, 323, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Veux tu tenter ta chance ?", "text_bbox": [300, 363, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "La r\u00e9ponse se trouve dans", "text_bbox": [300, 323, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "la biblioth\u00e9que.", "text_bbox": [300, 343, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Bien jou\u00e9 la question .", "text_bbox": [300, 323, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "Quitteri", "text_bbox": [455, 430, 125, 480], "polygon": [[518, 457], [520, 416], [534, 376], [558, 356], [604, 361], [621, 402], [624, 457], [592, 474]], "polygon_bbox": [518, 356, 624, 474], "commands": []}, {"name": "SORTIE\u0001", "text_bbox": [50, 350, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "SORTIE\u0001", "text_bbox": [50, 350, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "dossier euro\u0003", "text_bbox": [380, 290, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "SORTIE\u0001", "text_bbox": [50, 350, 125, 365], "polygon": [[2, 303], [86, 307], [195, 373], [349, 382], [532, 363], [635, 314], [637, 397], [4, 397]], "polygon_bbox": [2, 303, 637, 397], "commands": []}, {"name": "Une bouteille vided", "text_bbox": [400, 180, 125, 365], "polygon": [[339, 182], [321, 146], [347, 99], [350, 54], [346, 27], [363, 14], [392, 18], [395, 38], [390, 58], [388, 99], [415, 144], [401, 181], [369, 193]], "polygon_bbox": [321, 14, 415, 193], "commands": []}, {"name": "SORTIE\u0003", "text_bbox": [255, 350, 125, 365], "polygon": null, "polygon_bbox": null, "commands": []}, {"name": "euros ! ! !i", "text_bbox": [500, 100, 610, 130], "polygon": null, "polygon_bbox": null, "commands": []}];
+
+        function selectHotspot(index) {
+            // Update list selection
+            document.querySelectorAll('.hotspot-item').forEach((el, i) => {
+                el.classList.toggle('active', i === index);
+            });
+
+            // Update details
+            const hs = hotspots[index];
+            let html = '<strong>' + hs.name + '</strong><br><br>';
+            html += '<b>Text BBox:</b> (' + hs.text_bbox.join(', ') + ')<br>';
+            if (hs.polygon) {
+                html += '<b>Polygon:</b> ' + hs.polygon.length + ' points<br>';
+                html += '<b>BBox:</b> ' + hs.polygon_bbox.join(', ') + '<br>';
+            }
+            if (hs.commands.length > 0) {
+                html += '<br><b>Commands:</b><br>';
+                hs.commands.forEach(cmd => {
+                    html += '<div class="cmd">' + cmd + '</div>';
+                });
+            }
+            document.getElementById('details').innerHTML = html;
+
+            // Highlight polygon
+            document.querySelectorAll('.polygon').forEach((el, i) => {
+                el.style.strokeWidth = (i === index) ? '4' : '2';
+                el.style.fillOpacity = (i === index) ? '0.6' : '0.3';
+            });
+        }
+
+        // Tooltip on hover
+        document.querySelectorAll('.polygon').forEach(poly => {
+            poly.addEventListener('mousemove', (e) => {
+                const tooltip = document.getElementById('tooltip');
+                tooltip.innerHTML = poly.dataset.name;
+                tooltip.style.left = (e.pageX + 10) + 'px';
+                tooltip.style.top = (e.pageY + 10) + 'px';
+                tooltip.style.display = 'block';
+            });
+            poly.addEventListener('mouseout', () => {
+                document.getElementById('tooltip').style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
