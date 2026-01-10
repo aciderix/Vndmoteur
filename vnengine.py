@@ -219,16 +219,9 @@ class VNDCommandType(Enum):
     UNKNOWN = "unknown"
 
 
-# Hotspot suffix definitions based on DLL analysis
-HOTSPOT_SUFFIXES = {
-    'h': 'home',      # Return to parent scene
-    'd': 'display',   # Display detailed information
-    'f': 'forward',   # Close/forward navigation
-    'i': 'item',      # Interactive item (can be picked up)
-    'j': 'jump',      # Jump to info/play information
-    'k': 'key',       # Key-related action (unlock)
-    'l': 'link',      # Navigation link
-}
+# Hotspot suffixes - UNPROVEN, may be artifacts
+# TODO: Remove if no proof found in binaries
+HOTSPOT_SUFFIXES = {}
 
 
 # ============================================================================
