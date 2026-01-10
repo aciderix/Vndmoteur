@@ -89,10 +89,60 @@ Media:      playavi, playbmp, playwav, playmid, playcda, playseq, playhtml, play
 Close:      closeavi, closewav, closemid, closedll
 Bitmap:     addbmp, delbmp, showbmp, hidebmp
 Object:     showobj, hideobj, delobj, addtext
-Variables:  set_var, inc_var, dec_var
+Variables:  set_var, inc_var, dec_var, if
 Execution:  exec, runprj, rundll, pause
 UI:         tiptext, defcursor, font, msgbox, invalidate, update
 File:       load, save
+Comment:    rem
+
+## Command Dispatch Table (PROVEN - from europeo.exe @ 0x40ba62)
+Switch table with 49 entries at 0x40ba69, handler addresses:
+```
+Index | Command     | Handler Address | Notes
+------|-------------|-----------------|------------------
+0     | quit        | 0x0040bb2d      | Exit application
+1     | about       | 0x0040bb47      | Show about dialog
+2     | prefs       | 0x0040bb61      | Preferences
+3     | prev        | 0x0040bb7b      | Previous scene
+4     | next        | 0x0040bc46      | Next scene
+5     | zoom        | 0x0040bd11      | Zoom view
+6     | scene       | 0x0040bd2b      | Load scene
+7     | hotspot     | 0x0040bef9      | Define hotspot region
+8     | tiptext     | 0x0040bf6c      | Tooltip text
+9     | playavi     | 0x0040c097      | Play AVI video
+10    | playbmp     | 0x0040c134      | Display bitmap
+11    | playwav     | 0x0040c4fe      | Play WAV audio
+12    | playmid     | 0x0040c5c3      | Play MIDI
+13    | playhtml    | 0x0040c661      | Display HTML
+14-16 | zoomin/out/pause | 0x0040c82a | Shared handler
+17    | exec        | 0x0040c8e7      | Execute command
+18    | explore     | 0x0040bf6c      | Same as tiptext
+19    | playcda     | 0x0040c70d      | Play CD audio
+20    | playseq     | 0x0040c74b      | Play sequence
+21    | if          | 0x0040c99c      | Conditional
+22    | set_var     | 0x0040ca96      | Set variable
+23    | inc_var     | 0x0040cb26      | Increment variable
+24    | dec_var     | 0x0040cbd5      | Decrement variable
+25    | invalidate  | 0x0040cc84      | Redraw region
+26    | defcursor   | 0x0040ccce      | Define cursor
+27    | addbmp      | 0x0040c1f3      | Add bitmap
+28-30 | delbmp/showbmp/hidebmp | 0x0040c3a6 | Shared handler
+31    | runprj      | 0x0040cdee      | Run project
+32    | update      | 0x0040ccb5      | Update display
+33    | rundll      | 0x0040cf4f      | Run DLL
+34    | msgbox      | 0x0040d01d      | Message box
+35    | playcmd     | 0x0040d175      | Play command
+36    | closewav    | 0x0040c5aa      | Close WAV
+37    | closedll    | 0x0040d004      | Close DLL
+38    | playtext    | 0x0040d19f      | Display text
+39    | font        | 0x0040d23d      | Set font
+40    | rem         | 0x0040d6de      | Comment (no-op)
+41    | addtext     | 0x0040c2e3      | Add text object
+42-44 | delobj/showobj/hideobj | 0x0040c3a6 | Shared handler
+45    | load        | 0x0040d2ca      | Load state
+46    | save        | 0x0040d4c7      | Save state
+47-48 | closeavi/closemid | 0x0040c5aa | Shared close handler
+```
 
 ## Event Types (PROVEN - from europeo.exe)
 - EV_ONFOCUS  : Mouse hover/focus event
@@ -112,6 +162,44 @@ typedef struct VNDLLVar {
     int value;            // 0x100: Variable value
     struct VNDLLVar* next; // 0x104: Next in linked list
 } VNDLLVar;  // Total: 264 bytes (0x108)
+```
+
+## Hotspot Binary Structure (PROVEN - from europeo.exe @ 0x412168)
+Hotspots use polygon regions for hit-testing via Windows GDI TRegion.
+```c
+typedef struct TPoint {
+    int x;    // 4 bytes
+    int y;    // 4 bytes
+} TPoint;     // 8 bytes
+
+typedef struct HotspotRecord {
+    // ... header fields ...
+    uint8_t  flags;           // @ +0x31 : flags (bit 1 = special mode)
+    uint32_t point_count;     // @ +0x35 : number of polygon points
+    TPoint*  points;          // @ +0x39 : pointer to point array
+    // ...
+} HotspotRecord;
+```
+Hit-testing: Uses OWL52t.dll TRegion constructor with points array,
+then calls GDI32 PtInRegion() to test if mouse is inside polygon.
+Key function: fcn.00412168 @ europeo.exe (handles 2-point rect case specially)
+
+## Binary Stream Reading (PROVEN - from europeo.exe)
+Uses Borland Data Streaming (bds52t.dll):
+- ipstream_readWord32_qv  @ 0x439180 : Read 32-bit LE integer
+- ipstream_readWord_qv    @ 0x439186 : Read 16-bit LE word
+- ipstream_readBytes_qpvui @ 0x439192 : Read raw bytes
+- ipstream_readVersion_qv @ 0x43918c : Read version info
+
+VND Record Reading @ 0x42662b:
+```c
+void ReadVNDRecord(HotspotRecord* rec, ipstream* stream) {
+    ipstream_readBytes(stream, &rec->field_08, 4);  // rect/bounds?
+    ipstream_readBytes(stream, &rec->field_0c, 4);
+    ipstream_readBytes(stream, &rec->field_10, 4);
+    uint32_t flags = ipstream_readWord32(stream);
+    rec->field_14 = (flags != 0);
+}
 ```
 
 ## Author
